@@ -7,21 +7,70 @@ Sample software system used to monitor data from various sensors attached to a R
 
 ```text
 RPi_Environmental_Monitor_System
-  ├── main program, MasterTask
-  ├── bin
-  ├── build
-  ├── data
-  ├── documents
-  ├── hardware
-  |  ├── include
-  |  ├── source
-  ├── sensors
-  |  ├── include
-  |  ├── source
-  ├── ui
-  |  ├── include
-  |  ├── source
-  └── test
+  |-- CMakeLists.txt
+  |-- DataStore.cpp
+  |-- DataStore.h
+  |-- EnvironmentMonitor.cpp : main program
+  |-- EnvironmentMonitor.h.in
+  |-- LICENSE
+  |-- Makefile
+  |-- MasterTask.cpp
+  |-- MasterTask.h
+  |-- README.md
+  |-- bin : Binary outputs
+  |-- build : Directory to run cmake
+  |-- data
+  |   |-- config.bin : Used by BME680/BSEC library
+  |   `-- state.bin : Used by BME680/BSEC library
+  |-- documents
+  |   |-- LICENSE
+  |   |-- LICENSE-BME280
+  |   |-- README-BME280.md
+  |   |-- README-BME68x-Sensor-API.md
+  |   |-- README.md
+  |   `-- RPiEnvMonSys_SW_Architecture.drawio
+  |-- hardware
+  |   |-- CMakeLists.txt
+  |   |-- include
+  |   |   |-- ADS1115.h
+  |   |   |-- Debug.h
+  |   |   |-- I2Cdev.h
+  |   |   |-- bme280.h
+  |   |   |-- bme280_defs.h
+  |   |   |-- bme68x.h
+  |   |   |-- bme68x_defs.h
+  |   |   |-- bsec_datatypes.h
+  |   |   |-- bsec_integration.h
+  |   |   `-- bsec_interface.h
+  |   |-- libalgobsec.a : Externally-provided BME680/BSEC library
+  |   `-- source
+  |       |-- ADS1115.cpp
+  |       |-- Debug.cpp
+  |       |-- I2Cdev.cpp
+  |       |-- bme280.cpp
+  |       |-- bme68x.cpp
+  |       `-- bsec_integration.cpp
+  |-- sensors
+  |   |-- CMakeLists.txt
+  |   |-- include
+  |   |   `-- SensorTask.h
+  |   `-- source
+  |       `-- SensorTask.cpp
+  |-- test
+  |   |-- Makefile
+  |   |-- test_ADS1115_differential
+  |   |-- test_ADS1115_differential.cpp
+  |   |-- test_ADS1115_single
+  |   |-- test_ADS1115_single.cpp
+  |   |-- test_bme280
+  |   |-- test_bme280.cpp
+  |   |-- test_bsec_rpi
+  |   `-- test_bsec_rpi.cpp
+  `-- ui
+      |-- include
+      |   `-- UITask.h
+      `-- source
+          `-- UITask.cpp
 ```
 
 ## External Dependencies
@@ -31,7 +80,8 @@ RPi_Environmental_Monitor_System
 
 ## Description
 
-![Data Gathering System SW Architecture](%2E%2FDGS_SW_Architecture%2Edrawio%2Epng)  
+![Data Gathering System SW Architecture](RPiEnvMonSys_SW_Architecture%2Edrawio)  
+![Data Gathering System SW Architecture](RPiEnvMonSys_SW_Architecture%2Epng)  
 
 The main() function of the application provides the "background" processing for the application. All data gathering, handling, and logging is done using subordinate application tasks, which are controlled by a master task (which in turn can be controlled by the main function.)
 

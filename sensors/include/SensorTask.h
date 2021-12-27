@@ -1,6 +1,6 @@
 /* 
- * This file is part of the DataGatheringSystem distribution
- *   (https://github.com/nuncio-bitis/DataGatheringSystem
+ * This file is part of the RPi_Environmental_Monitor_System distribution
+ *   (https://github.com/nuncio-bitis/RPi_Environmental_Monitor_System
  * Copyright (c) 2021 James P. Parziale.
  * 
  * This program is free software: you can redistribute it and/or modify  
