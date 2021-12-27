@@ -17,5 +17,5 @@
  */
 
 // Configured options and settings for SigGen
-#define EnvironmentMonitor_VERSION_MAJOR @EnvironmentMonitor_VERSION_MAJOR@
-#define EnvironmentMonitor_VERSION_MINOR @EnvironmentMonitor_VERSION_MINOR@
+#define EnvironmentMonitor_VERSION_MAJOR 1
+#define EnvironmentMonitor_VERSION_MINOR 0

@@ -50,8 +50,9 @@
 #include "MasterTask.h"
 #include "UITask.h"
 
-#include "FluidTempSensor.h"
 #include "SensorTask.h"
+
+#include "EnvironmentMonitor.h"
 
 //-----------------------------------------------------------------------------
 
@@ -198,6 +199,9 @@ int main(int argc, char **argv)
 
     logger.MirrorToStdOut();
 
+    logger.log(eLOG_INFO, "%s v%d.%d", basename(argv[0]),
+        EnvironmentMonitor_VERSION_MAJOR, EnvironmentMonitor_VERSION_MINOR);
+
     //-------------------------------------------------------------------------
 
     // Create DataStore that owns all data objects in the system.
@@ -215,8 +219,8 @@ int main(int argc, char **argv)
 
     // Sensor tasks (Type = flow, pressure, temperature, light, humidity, ...)
     //   type (string), sample freq (double), report period (samples in this period are averaged before reported)
-    FluidTempSensor sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
-//    SensorTask      sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
+//    FluidTempSensor sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
+    SensorTask      sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
     SensorTask      sensor2{"Gas Flow Rate",   FLOW1,        &logger, "Flow",         5.0, 1.0}; // 5Hz, update every 1 seconds
     SensorTask      sensor3{"Gas Pressure",    PRESSURE1,    &logger, "Pressure",    10.0, 3.0}; // 10Hz, update every 3 seconds
 
@@ -576,7 +580,8 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
     //  Get backtrace of stack.  For some architectures, replace missing address.
     int btSz  = backtrace((void**)stack, maxbtsize);
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
-    stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_RIP]);     // x86_64
+    stack[3] = (void *)(cntxt->uc_mcontext.arm_ip);     // RaspberryPi
+//    stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_RIP]);     // x86_64
 //    stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_EIP]);   // i386
 //    stack[3] = (void *)(cntxt->uc_mcontext.regs->nip);        // PPC
 #else
