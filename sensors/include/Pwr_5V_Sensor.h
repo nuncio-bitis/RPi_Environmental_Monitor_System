@@ -16,31 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /*
- * SensorTask.h
+ * Pwr_5V_Sensor.h
  *
- * Created on: Feb 20, 2020
+ * Created on: Dec 28, 2021
  * Author: jparziale
  */
 
-#ifndef SENSORTASK_H_
-#define SENSORTASK_H_
+#ifndef P5V_SENSORTASK_H_
+#define P5V_SENSORTASK_H_
 // ****************************************************************************
 
 #include "Logger.h"
 #include "AppTask.h"
 #include "DataItem.h"
 
-class SensorTask : public AppTask
+class Pwr5VSensorTask : public AppTask
 {
     // ------------------------------------------------------------------------
 public:
-    SensorTask(const std::string name,
+    Pwr5VSensorTask(const std::string name,
                DataItemId id,
                Logger* pLog,
                const std::string type,
                double sampleFreq,
                double reportPeriod);
-    virtual ~SensorTask();
+    virtual ~Pwr5VSensorTask();
 
     // ------------------------------------------------------------------------
 private:
@@ -52,11 +52,11 @@ private:
     int m_samplesPerReport;
     int m_sampleCount;
 
-    DataItem<double> *pDataItem; // XXX
+    DataItem<double> *pDataItem;
 
     // Work function of the sensor task.
     void Entry(void) override;
 };
 
 // ****************************************************************************
-#endif /* SENSORTASK_H_ */
+#endif /* P5V_SENSORTASK_H_ */

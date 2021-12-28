@@ -19,7 +19,7 @@
  * DataStore.cpp
  *
  *  Created on: Dec 31, 2020
- *      Author: jparz
+ *      Author: jparziale
  */
 // ****************************************************************************
 
@@ -36,24 +36,40 @@ std::vector<DataItemPublisher*> DataStore::m_DataItemList(NUM_DATA_ITEMS);
 
 // ****************************************************************************
 
-DataStore::DataStore() {
+DataStore::DataStore()
+{
     s_pInstance = this;
 
     // Create data items. They will be referenced by index, so create them by index.
+    // Format:
+    // m_DataItemList[DID] = new DataItem<TYPE>(NAME, UNITS, DID, INITIAL_VAL, LOW_LIMIT, HIGH_LIMIT, STALE_TIME);
+
+    // CPU sensor items
     m_DataItemList[CPU_MEM_FREE] =
         new DataItem<uint64_t>("CPU_Mem_Free", "bytes", CPU_MEM_FREE, 0, 0, ((uint64_t)8*1024*1024*1024), 5000);
     m_DataItemList[CPU_TEMP]     = new DataItem<double>("CPU_Temp", "︒C", CPU_TEMP, 0, -40.0, 80.0, 5000);
 
-    m_DataItemList[TEMP_SENSE_1] = new DataItem<double>("Fluid_Temp", "︒C", TEMP_SENSE_1, 0, -40.0, 80.0, 5000);
-    m_DataItemList[TEMP_SENSE_2] = new DataItem<double>("Temp_2", "︒C", TEMP_SENSE_2, 0, -40.0, 80.0, 5000);
-    m_DataItemList[PRESSURE1]    = new DataItem<double>("Gas_Pressure", "PSI", PRESSURE1, 0, 0.0, 250.0, 3000);
-    m_DataItemList[PRESSURE2]    = new DataItem<double>("Pressure_2", "mmHg", PRESSURE2, 0, 0.0, 250.0, 3000);
-    m_DataItemList[FLOW1]        = new DataItem<double>("Gas_Flow_Rate", "l/hr", FLOW1, 0, 0.0, 1000.0, 2000);
-    m_DataItemList[FLOW2]        = new DataItem<double>("Flow_2", "ml/hr", FLOW2, 0, 0.0, 1000.0, 2000);
+    // ADS1115 ADC sensors
+    m_DataItemList[LIGHT_SENSE   ] = new DataItem<double>("Ambient_Light", "V", LIGHT_SENSE   , 0.0, 0.0, 6.0, 1000);
+    m_DataItemList[PWR_5V_SENSE  ] = new DataItem<double>("Pwr_5V"       , "V", PWR_5V_SENSE  , 0.0, 0.0, 6.0, 10000);
+    m_DataItemList[PWR_3P3V_SENSE] = new DataItem<double>("Pwr_3p3V"     , "V", PWR_3P3V_SENSE, 0.0, 0.0, 6.0, 10000);
+
+    // BME280 sensor items
+    m_DataItemList[BME280_TEMP   ] = new DataItem<double>("BME280_Ambient_Temp", "︒C"  , BME280_TEMP , 0.0, 0.0, 100.0, 5000);
+    m_DataItemList[BME280_RHUM   ] = new DataItem<double>("BME280_Rel_Humidity", "%"   , BME280_RHUM , 0.0, 0.0, 100.0, 5000);
+    m_DataItemList[BME280_PRESS  ] = new DataItem<double>("BME280_Pressure"    , "inHg", BME280_PRESS, 0.0, 13.0, 20.0, 5000);
+
+    // BME680 sensor items
+    m_DataItemList[BME680_TEMP   ] = new DataItem<double>("BME680_Ambient_Temp"  , "︒C"  , BME680_TEMP  , 0.0, 0.0, 100.0, 5000);
+    m_DataItemList[BME680_RHUM   ] = new DataItem<double>("BME680_Rel_Humidity"  , "%"   , BME680_RHUM  , 0.0, 0.0, 100.0, 5000);
+    m_DataItemList[BME680_PRESS  ] = new DataItem<double>("BME680_Pressure"      , "inHg", BME680_PRESS , 0.0, 13.0, 20.0, 5000);
+    m_DataItemList[BME680_GASRES ] = new DataItem<double>("BME680_Gas_Resistance", "Ohms", BME680_GASRES, 0.0, 0.0, 100.0e03, 5000);
+    m_DataItemList[BME680_IAQA   ] = new DataItem<uint32_t>("BME680_IAQ_Accuracy", ""    , BME680_IAQA  , 0.0, 0, 3, 5000);
+    m_DataItemList[BME680_IAQ    ] = new DataItem<double>("BME680_IAQ"           , ""    , BME680_IAQ   , 0.0, 0.0, 1000.0, 5000);
 }
 
-DataStore::~DataStore() {
-
+DataStore::~DataStore()
+{
     // Delete all created data items
     for (auto p : m_DataItemList) {
         delete p;

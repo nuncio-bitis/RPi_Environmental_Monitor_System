@@ -16,32 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /*
- * SensorTask.cpp
+ * Pwr_3p3V_Sensor.cpp
  *
- * Created on: Feb 20, 2020
+ * Created on: Dec 28, 2021
  * Author: jparziale
  */
 // ****************************************************************************
 
 #include "DataStore.h"
-#include "SensorTask.h"
+#include "Pwr_3p3V_Sensor.h"
 
 #include <iostream>
 
-// XXX
-#include <ctime>
-#include <sys/time.h>
-// XXX
-
 // ****************************************************************************
 
-// TODO Each sensor should have specifics for its own HW interface
-// e.g. Type ("I2C", "SPI", "Serial", Mem-Mapped Addr, etc), Location ("/dev/...", "0x########", etc)
-
-// The id is the DataStore ID, which can be used for multiple purposes.
-// For example, PRESSURE1 and FLOW1 are being handled here using the same sensor class,
-// but instantiated as separate objects. (see main in DataMonitor.cpp)
-SensorTask::SensorTask(const std::string name, DataItemId id, Logger* pLog,
+Pwr3p3VSensorTask::Pwr3p3VSensorTask(const std::string name, DataItemId id, Logger* pLog,
                        const std::string type, double sampleFreq, double reportPeriod) :
     AppTask(name, pLog),
     m_id(id),
@@ -56,14 +45,14 @@ SensorTask::SensorTask(const std::string name, DataItemId id, Logger* pLog,
     m_pLog->log(eLOG_DEBUG, "%s : CREATED", GetName().c_str());
 }
 
-SensorTask::~SensorTask()
+Pwr3p3VSensorTask::~Pwr3p3VSensorTask()
 {
     m_pLog->log(eLOG_DEBUG, "%s.%s : DONE", GetName().c_str(), __FUNCTION__);
 }
 
 // ****************************************************************************
 
-void SensorTask::Entry()
+void Pwr3p3VSensorTask::Entry()
 {
     waitForBeginOperation();
 
@@ -100,27 +89,9 @@ void SensorTask::Entry()
 
         // TODO cumulative += value read from hardware
 
-        struct timeval detail_time; // For seconds and microseconds
-        gettimeofday(&detail_time, NULL);
-        double delta;
-
-        if (m_id == PRESSURE1) {
-            delta = (500.0 - (detail_time.tv_usec % 1000)) / 500.0; // rand[-1.0, 1.0]
-            current = 15.0 + delta;
-        } else if (m_id == FLOW1) {
-            delta = (500.0 - (detail_time.tv_usec % 1000)) / 100.0; // rand[-5.0, 5.0]
-            current = 25.0 + delta;
-        } else if (m_id == TEMP_SENSE_1) {
-            delta = (500.0 - (detail_time.tv_usec % 1000)) / 100.0; // rand[-5.0, 5.0]
-            current = 37.0 + delta;
-        }
-        cumulative += current;
-
         if (++m_sampleCount >= m_samplesPerReport) {
             newValue = cumulative / m_sampleCount;
             pDataItem->setValue(newValue);
-            //m_pLog->log(eLOG_DEBUG, "[%d] %s: Report %s - %lg %s",
-            //        m_id, GetName().c_str(), m_type.c_str(), newValue, pDataItem->getUnits().c_str() );
 
             m_sampleCount = 0;
             cumulative = 0.0;

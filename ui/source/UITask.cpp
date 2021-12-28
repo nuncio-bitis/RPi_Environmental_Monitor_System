@@ -40,17 +40,15 @@ UITask::UITask(const std::string name, int id, Logger* pLog) :
     temp_2_tok(0),
     press_1_tok(0),
     press_2_tok(0),
-    flow_1_tok(0),
-    flow_2_tok(0)
+    flow_1_tok(0)
 {
     cpu_mem_free = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_FREE));
     cpu_temp = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(CPU_TEMP));
-    temp_1   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(TEMP_SENSE_1));
-    temp_2   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(TEMP_SENSE_2));
-    press_1  = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PRESSURE1));
-    press_2  = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PRESSURE2));
-    flow_1   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(FLOW1));
-    flow_2   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(FLOW2));
+    temp_1   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(LIGHT_SENSE));
+    temp_2   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_5V_SENSE));
+    press_1  = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_3P3V_SENSE));
+    press_2  = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME280_TEMP));
+    flow_1   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_TEMP));
 
     m_pLog->log(eLOG_DEBUG, "%s(%d) : CREATED", GetName().c_str(), m_id);
 }
@@ -175,7 +173,6 @@ void UITask::Entry()
     press_1_tok      = press_1->subscribe(this);
     press_2_tok      = press_2->subscribe(this);
     flow_1_tok       = flow_1->subscribe(this);
-    flow_2_tok       = flow_2->subscribe(this);
 
     m_pLog->log(eLOG_DEBUG, "%s: BEGIN + Initialization", GetName().c_str());
     // ------------------------------------------------
@@ -208,7 +205,6 @@ void UITask::Entry()
             UpdateItem(press_1);
             UpdateItem(press_2);
             UpdateItem(flow_1);
-            UpdateItem(flow_2);
         }
         // --------------------------------------------
 
@@ -234,7 +230,6 @@ void UITask::Entry()
     press_1->unsubscribe (press_1_tok);
     press_2->unsubscribe (press_2_tok);
     flow_1->unsubscribe  (flow_1_tok);
-    flow_2->unsubscribe  (flow_2_tok);
     m_pLog->log(eLOG_DEBUG, "%s.%s : CLEANUP", GetName().c_str(), __FUNCTION__);
     // ------------------------------------------------
 }

@@ -32,5 +32,5 @@ Include these all as one sensor:
 * Pwr_5V_Sensor
 * Pwr_3p3V_Sensor
 * LightSensor
-* BME280
-* BME680
+* BME280Sensor
+* BME680Sensor

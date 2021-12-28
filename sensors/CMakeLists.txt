@@ -11,8 +11,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_library(sensors
-    source/SensorTask.cpp
-    # TODO
+    source/LightSensor.cpp
+    source/Pwr_5V_Sensor.cpp
+    source/Pwr_3p3V_Sensor.cpp
+    source/BME280Sensor.cpp
+    source/BME680Sensor.cpp
     )
 
 install(TARGETS sensors DESTINATION "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" )

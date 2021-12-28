@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the DataGatheringSystem distribution
  *   (https://github.com/nuncio-bitis/DataGatheringSystem
  * Copyright (c) 2021 James P. Parziale.
- * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3.
  *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /*
@@ -55,23 +55,42 @@ private:
 
     // Pointers to data store objects
     DataItem<uint64_t> *cpu_mem_free;
-    DataItem<double> *cpu_temp;
-    DataItem<double> *temp_1;
-    DataItem<double> *temp_2;
-    DataItem<double> *press_1;
-    DataItem<double> *press_2;
-    DataItem<double> *flow_1;
-    DataItem<double> *flow_2;
+    DataItem<double>   *cpu_temp;
 
+    DataItem<double>   *ambientLight;
+    DataItem<double>   *pwr5v;
+    DataItem<double>   *pwr3p3v;
+
+    DataItem<double>   *bme280Temp;
+    DataItem<double>   *bme280RelHum;
+    DataItem<double>   *bme280Pressure;
+
+    DataItem<double>   *bme680Temp;
+    DataItem<double>   *bme680RelHum;
+    DataItem<double>   *bme680Pressure;
+    DataItem<double>   *bme680GasResistance;
+    DataItem<uint32_t> *bme680IAQaccuracy;
+    DataItem<double>   *bme680IAQ;
+
+    // Subscription tokens to data store objects
     long cpu_mem_free_tok;
     long cpu_temp_tok;
-    long temp_1_tok;
-    long temp_2_tok;
-    long press_1_tok;
-    long press_2_tok;
-    long flow_1_tok;
-    long flow_2_tok;
-};
+
+    long ambientLight;
+    long pwr5v;
+    long pwr3p3v;
+
+    long bme280Temp;
+    long bme280RelHum;
+    long bme280Pressure;
+
+    long bme680Temp;
+    long bme680RelHum;
+    long bme680Pressure;
+    long bme680GasResistance;
+    long bme680IAQaccuracy;
+    long bme680IAQ;
+}
 
 // ****************************************************************************
 #endif /* UITASK_H_ */

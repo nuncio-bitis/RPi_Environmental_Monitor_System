@@ -51,11 +51,20 @@ RPi_Environmental_Monitor_System
   |       |-- bme68x.cpp
   |       `-- bsec_integration.cpp
   |-- sensors
-  |   |-- CMakeLists.txt
-  |   |-- include
-  |   |   `-- SensorTask.h
-  |   `-- source
-  |       `-- SensorTask.cpp
+  │   |-- CMakeLists.txt
+  │   |-- include
+  │   │   |-- BME280Sensor.h
+  │   │   |-- BME680Sensor.h
+  │   │   |-- LightSensor.h
+  │   │   |-- Pwr_3p3V_Sensor.h
+  │   │   `-- Pwr_5V_Sensor.h
+  │   |-- README.md
+  │   `-- source
+  │       |-- BME280Sensor.cpp
+  │       |-- BME680Sensor.cpp
+  │       |-- LightSensor.cpp
+  │       |-- Pwr_3p3V_Sensor.cpp
+  │       `-- Pwr_5V_Sensor.cpp
   |-- test
   |   |-- Makefile
   |   |-- test_ADS1115_differential

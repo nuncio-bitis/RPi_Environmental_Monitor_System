@@ -50,7 +50,11 @@
 #include "MasterTask.h"
 #include "UITask.h"
 
-#include "SensorTask.h"
+#include "LightSensor.h"
+#include "Pwr_5V_Sensor.h"
+#include "Pwr_3p3V_Sensor.h"
+#include "BME280Sensor.h"
+#include "BME680Sensor.h"
 
 #include "EnvironmentMonitor.h"
 
@@ -213,16 +217,18 @@ int main(int argc, char **argv)
     //-------------------------------------------------------------------------
 
     // Create all system task objects
-    // General task parameters:
-    //   name, id, *Logger
-    UITask ui{"User Interface", 104, &logger};
+    // General task parameters: name, id, *Logger
+    UITask ui{"User Interface", UI_TASK_ID, &logger};
 
-    // Sensor tasks (Type = flow, pressure, temperature, light, humidity, ...)
-    //   type (string), sample freq (double), report period (samples in this period are averaged before reported)
-//    FluidTempSensor sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
-    SensorTask      sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
-    SensorTask      sensor2{"Gas Flow Rate",   FLOW1,        &logger, "Flow",         5.0, 1.0}; // 5Hz, update every 1 seconds
-    SensorTask      sensor3{"Gas Pressure",    PRESSURE1,    &logger, "Pressure",    10.0, 3.0}; // 10Hz, update every 3 seconds
+    // Define sensor tasks (Type = flow, pressure, temperature, light, humidity, etc.)
+    // Note the Data ID (DID) doubles as a task ID.
+    // Format:
+    // TaskClass       taskVar     {NAME,                 DID,           LOG_PTR,  TYPE,  SAMPLE_FREQ, REPORT_PERIOD);
+    LightSensorTask   lightSensor  {"Ambient Light"     , LIGHT_SENSE   , &logger, "Light"  , 20.0, 2.0}; // 20Hz, update every 2 seconds
+    Pwr5VSensorTask   pwr5vSensor  {"5V Power Supply"   , PWR_5V_SENSE  , &logger, "Voltage", 20.0, 2.0}; // 20Hz, update every 2 seconds
+    Pwr3p3VSensorTask pwr3p3vSensor{"3.3V Power Supply" , PWR_3P3V_SENSE, &logger, "Voltage",  5.0, 1.0}; //  5Hz, update every 1 seconds
+    BME280SensorTask  bme280Sensor {"BME280 Env. Sensor", BME280_BASE   , &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
+    BME680SensorTask  bme680Sensor {"BME680 Env. Sensor", BME280_BASE   , &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
 
     // NOTE: Sensor tasks have their own timers to read and average sensor data, then write to DataStore objects.
 
@@ -237,9 +243,11 @@ int main(int argc, char **argv)
 
     // Add tasks
     masterTask.AddAppTask(&ui);
-    masterTask.AddAppTask(&sensor1);
-    masterTask.AddAppTask(&sensor2);
-    masterTask.AddAppTask(&sensor3);
+    masterTask.AddAppTask(&lightSensor);
+    masterTask.AddAppTask(&pwr5vSensor);
+    masterTask.AddAppTask(&pwr3p3vSensor);
+    masterTask.AddAppTask(&bme280Sensor);
+    masterTask.AddAppTask(&bme680Sensor);
 
     //-------------------------------------------------------------------------
 
