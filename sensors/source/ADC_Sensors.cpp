@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /*
- * Pwr_5V_Sensor.cpp
+ * ADC_Sensors.cpp
  *
  * Created on: Dec 28, 2021
  * Author: jparziale
@@ -24,13 +24,13 @@
 // ****************************************************************************
 
 #include "DataStore.h"
-#include "Pwr_5V_Sensor.h"
+#include "ADC_Sensors.h"
 
 #include <iostream>
 
 // ****************************************************************************
 
-Pwr5VSensorTask::Pwr5VSensorTask(const std::string name, DataItemId id, Logger* pLog,
+ADCSensorsTask::ADCSensorsTask(const std::string name, DataItemId id, Logger* pLog,
                        const std::string type, double sampleFreq, double reportPeriod) :
     AppTask(name, pLog),
     m_id(id),
@@ -40,13 +40,15 @@ Pwr5VSensorTask::Pwr5VSensorTask(const std::string name, DataItemId id, Logger* 
     m_reportPeriod(reportPeriod),
     m_samplesPerReport(sampleFreq * reportPeriod),
     m_sampleCount(0),
-    pDataItem(nullptr)
+    pAmbientLight(nullptr),
+    pPwr5v(nullptr),
+    pPwr3p3v(nullptr)
 {
     pADC0 = new ADS1115(ADS1115_DEFAULT_ADDRESS);
     m_pLog->log(eLOG_DEBUG, "%s : CREATED", GetName().c_str());
 }
 
-Pwr5VSensorTask::~Pwr5VSensorTask()
+ADCSensorsTask::~ADCSensorsTask()
 {
     delete(pADC0);
     m_pLog->log(eLOG_DEBUG, "%s.%s : DONE", GetName().c_str(), __FUNCTION__);
@@ -54,7 +56,7 @@ Pwr5VSensorTask::~Pwr5VSensorTask()
 
 // ****************************************************************************
 
-void Pwr5VSensorTask::Entry()
+void ADCSensorsTask::Entry()
 {
     waitForBeginOperation();
 
@@ -66,14 +68,26 @@ void Pwr5VSensorTask::Entry()
     // ADC setup
     Setup();
 
-    double current = 0.0;
-    double cumulative = 0.0;
-    double newValue = 0.0;
+    pAmbientLight = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(LIGHT_SENSE));
+    pPwr5v = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_5V_SENSE));
+    pPwr3p3v = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_3P3V_SENSE));
 
-    pDataItem = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(m_id));
+    // Set stale time = 2 x reportPeriod (milliseconds)
+    pAmbientLight->setStaleTime(2 * m_reportPeriod * 1000);
+    pPwr5v->setStaleTime(2 * m_reportPeriod * 1000);
+    pPwr3p3v->setStaleTime(2 * m_reportPeriod * 1000);
 
-    // Set stale time = 2 x reportPeriod
-    pDataItem->setStaleTime(2 * m_reportPeriod * 1000 /* ms */);
+    double light_current = 0.0;
+    double light_cumulative = 0.0;
+    double light_avg = 0.0;
+
+    double v5_current = 0.0;
+    double v5_cumulative = 0.0;
+    double v5_avg = 0.0;
+
+    double v3p3_current = 0.0;
+    double v3p3_cumulative = 0.0;
+    double v3p3_avg = 0.0;
 
     // ------------------------------------------------
 
@@ -86,31 +100,62 @@ void Pwr5VSensorTask::Entry()
             m_pLog->log(eLOG_DEBUG, "%s: %s", GetName().c_str(), GetStateName().c_str());
         }
 
-        // --------------------------------------------
-        // Task work - gather sensor data
-
         // Get sample at sample frequency
         Sleep(1000 / m_sampleFreq);
 
-        pADC0->setMultiplexer(ADS1115_MUX_P2_NG);
+        // --------------------------------------------
+        // Light sensor
+        pADC0->setMultiplexer(ADS1115_MUX_P3_NG);
         pADC0->triggerConversion();
-        pADC0->setComparatorMode(false);
-        pADC0->setComparatorQueueMode(false);
-        pADC0->showConfigRegister();
         Sleep(10);
-        current = pADC0->getMilliVolts(true);
-        m_pLog->log(eLOG_DEBUG, "A2: %.2f mV", current);
+        light_current = pADC0->getMilliVolts(true);
+        //m_pLog->log(eLOG_DEBUG, "A3: %.2f mV", light_current);
 
         // cumulative += value read from hardware
-        cumulative += current;
+        light_cumulative += light_current;
 
-        if (++m_sampleCount >= m_samplesPerReport) {
-            newValue = cumulative / m_sampleCount;
-            pDataItem->setValue(newValue);
+        // --------------------------------------------
+        // 5V power monitor
+        pADC0->setMultiplexer(ADS1115_MUX_P2_NG);
+        pADC0->triggerConversion();
+        Sleep(10);
+        v5_current = pADC0->getMilliVolts(true);
+        //m_pLog->log(eLOG_DEBUG, "A2: %.2f mV", v5_current);
+
+        // cumulative += value read from hardware
+        v5_cumulative += v5_current;
+
+        // --------------------------------------------
+        // 3.3V power monitor
+        pADC0->setMultiplexer(ADS1115_MUX_P1_NG);
+        pADC0->triggerConversion();
+        Sleep(10);
+        v3p3_current = pADC0->getMilliVolts(true);
+        //m_pLog->log(eLOG_DEBUG, "A1: %.2f mV", v3p3_current);
+
+        // cumulative += value read from hardware
+        v3p3_cumulative += v3p3_current;
+
+        // --------------------------------------------
+        // Take averages and report on report period
+
+        if (++m_sampleCount >= m_samplesPerReport)
+        {
+            light_avg = light_cumulative / m_sampleCount;
+            pAmbientLight->setValue(light_avg);
+            light_cumulative = 0.0;
+
+            v5_avg = v5_cumulative / m_sampleCount;
+            pPwr5v->setValue(v5_avg);
+            v5_cumulative = 0.0;
+
+            v3p3_avg = v3p3_cumulative / m_sampleCount;
+            pPwr3p3v->setValue(v3p3_avg);
+            v3p3_cumulative = 0.0;
 
             m_sampleCount = 0;
-            cumulative = 0.0;
         }
+
         // --------------------------------------------
 
         // PAUSED: Must wait to be told to continue.
@@ -135,7 +180,7 @@ void Pwr5VSensorTask::Entry()
 
 // ****************************************************************************
 
-void Pwr5VSensorTask::Setup()
+void ADCSensorsTask::Setup()
 {
     pADC0->initialize(); // initialize ADS1115 16 bit A/D chip
 
@@ -164,7 +209,7 @@ void Pwr5VSensorTask::Setup()
 
     pADC0->setConversionReadyPinMode();
 
-    pADC0->showConfigRegister();
+    //pADC0->showConfigRegister();
 }
 
 // ****************************************************************************

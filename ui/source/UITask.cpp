@@ -36,19 +36,34 @@ UITask::UITask(const std::string name, int id, Logger* pLog) :
     m_pLog(pLog),
     cpu_mem_free_tok(0),
     cpu_temp_tok(0),
-    temp_1_tok(0),
-    temp_2_tok(0),
-    press_1_tok(0),
-    press_2_tok(0),
-    flow_1_tok(0)
+    ambientLight_tok(0),
+    pwr5v_tok(0),
+    pwr3p3v_tok(0),
+    bme280Temp_tok(0),
+    bme280RelHum_tok(0),
+    bme280Pressure_tok(0),
+    bme680Temp_tok(0),
+    bme680RelHum_tok(0),
+    bme680Pressure_tok(0),
+    bme680GasResistance_tok(0),
+    bme680IAQaccuracy_tok(0),
+    bme680IAQ_tok(0)
 {
     cpu_mem_free = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_FREE));
     cpu_temp = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(CPU_TEMP));
-    temp_1   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(LIGHT_SENSE));
-    temp_2   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_5V_SENSE));
-    press_1  = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_3P3V_SENSE));
-    press_2  = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME280_TEMP));
-    flow_1   = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_TEMP));
+
+    ambientLight        = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(LIGHT_SENSE));
+    pwr5v               = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_5V_SENSE));
+    pwr3p3v             = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(PWR_3P3V_SENSE));
+    bme280Temp          = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME280_TEMPERATURE));
+    bme280RelHum        = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME280_RHUM));
+    bme280Pressure      = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME280_PRESSURE));
+    bme680Temp          = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_TEMPERATURE));
+    bme680RelHum        = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_RHUM));
+    bme680Pressure      = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_PRESSURE));
+    bme680GasResistance = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_GASRES));
+    bme680IAQaccuracy   = dynamic_cast<DataItem<uint32_t> *>(DataStore::getInstance()->GetDataItem(BME680_IAQA));
+    bme680IAQ           = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_IAQ));
 
     m_pLog->log(eLOG_DEBUG, "%s(%d) : CREATED", GetName().c_str(), m_id);
 }
@@ -59,6 +74,37 @@ UITask::~UITask()
 }
 
 // ****************************************************************************
+
+void UITask::UpdateItem(DataItem<uint32_t> *item)
+{
+    uint32_t value;
+    DataItemState state = item->getValue(value);
+
+    if (state == DataItemState::Invalid) {
+        return;
+    }
+
+    std::string sstate;
+    if (state == DataItemState::OutOfRangeLow) {
+        sstate = "OORL";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %ld %s *LOW*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
+    } else if (state == DataItemState::OutOfRangeHigh) {
+        sstate = "OORH";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %ld %s *HIGH*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
+    } else if (state == DataItemState::Stale) {
+        sstate = "STALE";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %ld %s *STALE*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
+    } else if (state == DataItemState::Valid) {
+        sstate = "OK";
+        m_pLog->log(eLOG_DEBUG, "[UI] (%s) %s %ld %s",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
+    }
+
+    // TODO Update value on UI
+}
 
 void UITask::UpdateItem(DataItem<uint64_t> *item)
 {
@@ -103,15 +149,15 @@ void UITask::UpdateItem(DataItem<double> *item)
     std::string sstate;
     if (state == DataItemState::OutOfRangeLow) {
         sstate = "OORL";
-        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *LOW*",
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lg %s *LOW*",
                 sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::OutOfRangeHigh) {
         sstate = "OORH";
-        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *HIGH*",
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lg %s *HIGH*",
                 sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::Stale) {
         sstate = "STALE";
-        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *STALE*",
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lg %s *STALE*",
                 sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::Valid) {
         sstate = "OK";
@@ -128,7 +174,8 @@ void UITask::UpdateItem(DataItem<double> *item)
 void UITask::DataItemUpdated(int id)
 {
     DataItemPublisher* pdi = DataStore::GetDataItem((DataItemId)id);
-    m_pLog->log(eLOG_DEBUG, "[UI] Data Item '%s' update detected.", pdi->name().c_str());
+//    DataItem<double> *pdi = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem((DataItemId)id));
+    m_pLog->log(eLOG_DEBUG, "[UI] Data Item '%s' (%d) update detected.", pdi->name().c_str(), id);
 /*
     switch (id) {
     case CPU_MEM_FREE:
@@ -168,11 +215,18 @@ void UITask::Entry()
     // NOTE: This isn't necessary if the UI will simply poll the data items.
     cpu_mem_free_tok = cpu_mem_free->subscribe(this);
     cpu_temp_tok     = cpu_temp->subscribe(this);
-    temp_1_tok       = temp_1->subscribe(this);
-    temp_2_tok       = temp_2->subscribe(this);
-    press_1_tok      = press_1->subscribe(this);
-    press_2_tok      = press_2->subscribe(this);
-    flow_1_tok       = flow_1->subscribe(this);
+    ambientLight_tok        = ambientLight->subscribe(this);
+    pwr5v_tok               = pwr5v->subscribe(this);
+    pwr3p3v_tok             = pwr3p3v->subscribe(this);
+    bme280Temp_tok          = bme280Temp->subscribe(this);
+    bme280RelHum_tok        = bme280RelHum->subscribe(this);
+    bme280Pressure_tok      = bme280Pressure->subscribe(this);
+    bme680Temp_tok          = bme680Temp->subscribe(this);
+    bme680RelHum_tok        = bme680RelHum->subscribe(this);
+    bme680Pressure_tok      = bme680Pressure->subscribe(this);
+    bme680GasResistance_tok = bme680GasResistance->subscribe(this);
+    bme680IAQaccuracy_tok   = bme680IAQaccuracy->subscribe(this);
+    bme680IAQ_tok           = bme680IAQ->subscribe(this);
 
     m_pLog->log(eLOG_DEBUG, "%s: BEGIN + Initialization", GetName().c_str());
     // ------------------------------------------------
@@ -200,11 +254,18 @@ void UITask::Entry()
             // Note this is separate from DataItemUpdated() being called when data is updated.
             UpdateItem(cpu_mem_free);
             UpdateItem(cpu_temp);
-            UpdateItem(temp_1);
-            UpdateItem(temp_2);
-            UpdateItem(press_1);
-            UpdateItem(press_2);
-            UpdateItem(flow_1);
+            UpdateItem(ambientLight);
+            UpdateItem(pwr5v);
+            UpdateItem(pwr3p3v);
+            UpdateItem(bme280Temp);
+            UpdateItem(bme280RelHum);
+            UpdateItem(bme280Pressure);
+            UpdateItem(bme680Temp);
+            UpdateItem(bme680RelHum);
+            UpdateItem(bme680Pressure);
+            UpdateItem(bme680GasResistance);
+            UpdateItem(bme680IAQaccuracy);
+            UpdateItem(bme680IAQ);
         }
         // --------------------------------------------
 
@@ -225,11 +286,20 @@ void UITask::Entry()
     // Task cleanup... unsubscribe from data items
     cpu_mem_free->unsubscribe(cpu_mem_free_tok);
     cpu_temp->unsubscribe(cpu_temp_tok);
-    temp_1->unsubscribe  (temp_1_tok);
-    temp_2->unsubscribe  (temp_2_tok);
-    press_1->unsubscribe (press_1_tok);
-    press_2->unsubscribe (press_2_tok);
-    flow_1->unsubscribe  (flow_1_tok);
+
+    ambientLight->unsubscribe(ambientLight_tok);
+    pwr5v->unsubscribe(pwr5v_tok);
+    pwr3p3v->unsubscribe(pwr3p3v_tok);
+    bme280Temp->unsubscribe(bme280Temp_tok);
+    bme280RelHum->unsubscribe(bme280RelHum_tok);
+    bme280Pressure->unsubscribe(bme280Pressure_tok);
+    bme680Temp->unsubscribe(bme680Temp_tok);
+    bme680RelHum->unsubscribe(bme680RelHum_tok);
+    bme680Pressure->unsubscribe(bme680Pressure_tok);
+    bme680GasResistance->unsubscribe(bme680GasResistance_tok);
+    bme680IAQaccuracy->unsubscribe(bme680IAQaccuracy_tok);
+    bme680IAQ->unsubscribe(bme680IAQ_tok);
+
     m_pLog->log(eLOG_DEBUG, "%s.%s : CLEANUP", GetName().c_str(), __FUNCTION__);
     // ------------------------------------------------
 }

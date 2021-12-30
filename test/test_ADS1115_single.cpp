@@ -56,7 +56,8 @@ static ADS1115 adc0(ADS1115_DEFAULT_ADDRESS);
 
 //******************************************************************************
 
-void setup() {
+void setup()
+{
     //I2Cdev::begin();  // join I2C bus
 
     adc0.initialize(); // initialize ADS1115 16 bit A/D chip
@@ -144,7 +145,7 @@ int main(int argc, char *argv[])
 
         mDebug.println();
 
-    } while(false);
+    } while(true);
     std::cout << "========================================" << std::endl;
 
     return EXIT_SUCCESS;

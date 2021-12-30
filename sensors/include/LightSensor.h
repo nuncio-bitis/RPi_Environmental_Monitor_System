@@ -30,6 +30,8 @@
 #include "AppTask.h"
 #include "DataItem.h"
 
+#include "ADS1115.h"
+
 class LightSensorTask : public AppTask
 {
     // ------------------------------------------------------------------------
@@ -56,6 +58,13 @@ private:
 
     // Work function of the sensor task.
     void Entry(void) override;
+
+    // The "guts" of the sensor code.
+    // The light-sensitive resistor is on A3/GND of the ADS1115
+    ADS1115 *pADC0;
+
+    // ADC light sensor setup routine.
+    void Setup(void);
 };
 
 // ****************************************************************************

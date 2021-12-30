@@ -56,9 +56,14 @@
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-#define DegreesC_to_DegreesF(x) (9*x/5+32)
-#define hPa_to_inHg(x) (x*100/3386)
-#define Pa_to_inHg(x) (x/3386)
+#define DegreesC_to_DegreesF(x) (32+(x)*9/5)
+#define DegreesF_to_DegreesC(x) (((x)-32)*5/9)
+
+#define hPa_to_inHg(x) ((x)*100/3386)
+#define inHg_to_hPa(x) ((x)*3386/100)
+
+#define Pa_to_inHg(x) ((x)/3386)
+#define inHg_to_Pa(x) ((x)*3386)
 
 // *****************************************************************************
 

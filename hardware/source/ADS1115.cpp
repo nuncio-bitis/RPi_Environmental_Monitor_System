@@ -582,7 +582,8 @@ int16_t ADS1115::getHighThreshold() {
  * @param threshold New high threshold value
  * @see ADS1115_RA_HI_THRESH
  */
-void ADS1115::setHighThreshold(int16_t threshold) {
+void ADS1115::setHighThreshold(int16_t threshold)
+{
     mI2Cport->writeWord(ADS1115_RA_HI_THRESH, threshold);
 }
 
@@ -591,7 +592,8 @@ void ADS1115::setHighThreshold(int16_t threshold) {
  *  of the low threshold register to '0'. COMP_POL and COMP_QUE bits will be set to '0'.
  *  Note: ALERT/RDY pin requires a pull up resistor.
  */
-void ADS1115::setConversionReadyPinMode() {
+void ADS1115::setConversionReadyPinMode()
+{
     mI2Cport->writeBitW(ADS1115_RA_HI_THRESH, 15, 1);
     mI2Cport->writeBitW(ADS1115_RA_LO_THRESH, 15, 0);
     setComparatorPolarity(0);
@@ -599,19 +601,22 @@ void ADS1115::setConversionReadyPinMode() {
 }
 
 // Create a mask between two bits
-unsigned createMask(unsigned a, unsigned b) {
+unsigned createMask(unsigned a, unsigned b)
+{
    unsigned mask = 0;
    for (unsigned i=a; i<=b; i++)
        mask |= 1 << i;
    return mask;
 }
 
-uint16_t shiftDown(uint16_t extractFrom, int places) {
+uint16_t shiftDown(uint16_t extractFrom, int places)
+{
   return (extractFrom >> places);
 }
 
 
-uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) {
+uint16_t getValueFromBits(uint16_t extractFrom, int high, int length)
+{
    int low= high-length +1;
    uint16_t mask = createMask(low ,high);
    return shiftDown(extractFrom & mask, low);
@@ -619,7 +624,8 @@ uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) {
 
 /** Show all the config register settings
  */
-void ADS1115::showConfigRegister() {
+void ADS1115::showConfigRegister()
+{
     mI2Cport->readWord(ADS1115_RA_CONFIG, buffer);
     uint16_t configRegister = buffer[0];
     printf("ConfigRegister: 0x%04X\n", configRegister);

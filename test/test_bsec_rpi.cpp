@@ -640,7 +640,7 @@ int main(int argc, char *argv[] )
     // Create the I2C port based on its chip address.
     mI2Cport = new I2Cdev(BME68X_I2C_ADDR_HIGH);
 
-    return_values_init ret;
+    return_values_init ret = {BME68X_OK, BSEC_OK};
 
     // -----------------------------------------------------
 

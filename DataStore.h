@@ -39,19 +39,20 @@ enum DataItemId {
     CPU_MEM_FREE,   // /proc/meminfo (MemFree:)
     CPU_TEMP,       // Pi: /opt/vc/bin/vcgencmd measure_temp ; Linux: /sys/class/thermal/thermal_zone0/temp
 
-    LIGHT_SENSE,    // ADS1115, A3
+    ADC_BASE,
+    LIGHT_SENSE = ADC_BASE, // ADS1115, A3
     PWR_5V_SENSE,   // ADS1115, A2
     PWR_3P3V_SENSE, // ADS1115, TBD
 
     BME280_BASE,    // Base ID for all BME280 data items
-    BME280_TEMP = BME280_BASE, // Temp (︒C)
+    BME280_TEMPERATURE = BME280_BASE, // Temp (︒F)
     BME280_RHUM,  // RelHum (%)
-    BME280_PRESS, // Pressure (inHg)
+    BME280_PRESSURE, // Pressure (inHg)
 
     BME680_BASE,    // Base ID for all BME680 data items
-    BME680_TEMP = BME680_BASE, // Temp (︒C)
+    BME680_TEMPERATURE = BME680_BASE, // Temp (︒F)
     BME680_RHUM,  // RelHum (%)
-    BME680_PRESS, // Pressure (inHg)
+    BME680_PRESSURE, // Pressure (inHg)
     BME680_GASRES,
     BME680_IAQA,
     BME680_IAQ,

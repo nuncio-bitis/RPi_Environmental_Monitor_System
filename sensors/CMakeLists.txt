@@ -11,9 +11,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_library(sensors
-    source/LightSensor.cpp
-    source/Pwr_5V_Sensor.cpp
-    source/Pwr_3p3V_Sensor.cpp
+#    source/LightSensor.cpp
+#    source/Pwr_5V_Sensor.cpp
+#    source/Pwr_3p3V_Sensor.cpp
+    source/ADC_Sensors.cpp
     source/BME280Sensor.cpp
     source/BME680Sensor.cpp
     )
@@ -24,4 +25,5 @@ target_include_directories(sensors PUBLIC
     ${PROJECT_SOURCE_DIR}/../../../C-Projects/Tools/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}/../hardware/include
     )

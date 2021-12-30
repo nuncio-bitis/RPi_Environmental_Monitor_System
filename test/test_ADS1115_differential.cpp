@@ -51,7 +51,8 @@ Debug mDebug;
 
 ADS1115 adc0(ADS1115_DEFAULT_ADDRESS);
 
-void setup() {
+void setup()
+{
     mDebug.println("Initializing I2C devices...");
     adc0.initialize(); // initialize ADS1115 16 bit A/D chip
 

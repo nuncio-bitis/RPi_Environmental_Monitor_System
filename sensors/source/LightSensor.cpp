@@ -42,11 +42,13 @@ LightSensorTask::LightSensorTask(const std::string name, DataItemId id, Logger* 
     m_sampleCount(0),
     pDataItem(nullptr)
 {
+    pADC0 = new ADS1115(ADS1115_DEFAULT_ADDRESS);
     m_pLog->log(eLOG_DEBUG, "%s : CREATED", GetName().c_str());
 }
 
 LightSensorTask::~LightSensorTask()
 {
+    delete(pADC0);
     m_pLog->log(eLOG_DEBUG, "%s.%s : DONE", GetName().c_str(), __FUNCTION__);
 }
 
@@ -57,9 +59,12 @@ void LightSensorTask::Entry()
     waitForBeginOperation();
 
     // ------------------------------------------------
-    // TODO Task initialization
+    // Task initialization
 
     m_pLog->log(eLOG_DEBUG, "%s: BEGIN + Initialization", GetName().c_str());
+
+    // ADC setup
+    Setup();
 
     double current = 0.0;
     double cumulative = 0.0;
@@ -82,12 +87,21 @@ void LightSensorTask::Entry()
         }
 
         // --------------------------------------------
-        // TODO Task work - gather sensor data
+        // Task work - gather sensor data
 
         // Get sample at sample frequency
         Sleep(1000 / m_sampleFreq);
 
-        // TODO cumulative += value read from hardware
+        pADC0->setMultiplexer(ADS1115_MUX_P3_NG);
+        pADC0->triggerConversion();
+        pADC0->setComparatorMode(false);
+        pADC0->setComparatorQueueMode(false);
+        Sleep(10);
+        current = pADC0->getMilliVolts(true);
+        m_pLog->log(eLOG_DEBUG, "A3: %.2f mV", current);
+
+        // cumulative += value read from hardware
+        cumulative += current;
 
         if (++m_sampleCount >= m_samplesPerReport) {
             newValue = cumulative / m_sampleCount;
@@ -105,6 +119,7 @@ void LightSensorTask::Entry()
 
             m_pLog->log(eLOG_DEBUG, "--- %s Paused", GetName().c_str());
             waitForContinue();
+            Setup();
             m_pLog->log(eLOG_DEBUG, "--- %s Continuing", GetName().c_str());
         }
 
@@ -112,9 +127,43 @@ void LightSensorTask::Entry()
     } // end while running
 
     // ------------------------------------------------
-    // TODO Task cleanup before exit
+    // Task cleanup before exit
     m_pLog->log(eLOG_DEBUG, "%s.%s : CLEANUP", GetName().c_str(), __FUNCTION__);
     // ------------------------------------------------
+}
+
+// ****************************************************************************
+
+void LightSensorTask::Setup()
+{
+    pADC0->initialize(); // initialize ADS1115 16 bit A/D chip
+
+    m_pLog->log(eLOG_DEBUG, "%s: Testing device connections...", GetName().c_str());
+    m_pLog->log(eLOG_DEBUG, pADC0->testConnection() ? "%s: ADS1115 connection successful"
+                                                    : "%s: ADS1115 connection failed",
+        GetName().c_str());
+
+    // We're going to do single shot sampling
+    //m_pLog->log(eLOG_DEBUG, "%s: setMode(ADS1115_MODE_SINGLESHOT)...", GetName().c_str());
+    pADC0->setMode(ADS1115_MODE_SINGLESHOT);
+
+    // Slow things down so that we can see that the "poll for conversion" code works
+    //m_pLog->log(eLOG_DEBUG, "%s: setRate(ADS1115_RATE_250)...", GetName().c_str());
+    pADC0->setRate(ADS1115_RATE_250);
+
+    // Set the gain (PGA) +/- 6.144V
+    // Note that any analog input must be higher than –0.3V and less than VDD +0.3
+    //m_pLog->log(eLOG_DEBUG, "%s: setGain(ADS1115_PGA_6P144)...", GetName().c_str());
+    pADC0->setGain(ADS1115_PGA_6P144);
+    // ALERT/RDY pin will indicate when conversion is ready
+
+    pADC0->setComparatorMode(false);
+
+    pADC0->setComparatorQueueMode(false);
+
+    pADC0->setConversionReadyPinMode();
+
+    pADC0->showConfigRegister();
 }
 
 // ****************************************************************************

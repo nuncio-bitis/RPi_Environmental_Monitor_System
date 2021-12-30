@@ -50,9 +50,10 @@
 #include "MasterTask.h"
 #include "UITask.h"
 
-#include "LightSensor.h"
-#include "Pwr_5V_Sensor.h"
-#include "Pwr_3p3V_Sensor.h"
+//#include "LightSensor.h"
+//#include "Pwr_5V_Sensor.h"
+//#include "Pwr_3p3V_Sensor.h"
+#include "ADC_Sensors.h"
 #include "BME280Sensor.h"
 #include "BME680Sensor.h"
 
@@ -63,8 +64,11 @@
 //  Exception handling
 void SetupExceptionHandler();
 
+void SaveSystemState(void);
+
 static Logger *pLogger = nullptr;
 
+static int gStateCount = 0;
 static uint8_t gTerminate = 0;
 
 //-----------------------------------------------------------------------------
@@ -155,7 +159,7 @@ public:
         cpu_mem_free = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_FREE));
         cpu_temp = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(CPU_TEMP));
         m_plogger->log(eLOG_INFO, "StatTimer(%s) Start:%d, Intv:%d", name.c_str(), start, interval);
-    };
+    }
 
     void Start()
     {
@@ -198,7 +202,7 @@ int main(int argc, char **argv)
     SetupExceptionHandler();
 
     // Create system logger object
-    Logger logger("EnvironmentMonitor", eLOG_DEBUG);
+    Logger logger("../data/EnvironmentMonitor", eLOG_DEBUG);
     pLogger = &logger;
 
     logger.MirrorToStdOut();
@@ -224,11 +228,16 @@ int main(int argc, char **argv)
     // Note the Data ID (DID) doubles as a task ID.
     // Format:
     // TaskClass       taskVar     {NAME,                 DID,           LOG_PTR,  TYPE,  SAMPLE_FREQ, REPORT_PERIOD);
-    LightSensorTask   lightSensor  {"Ambient Light"     , LIGHT_SENSE   , &logger, "Light"  , 20.0, 2.0}; // 20Hz, update every 2 seconds
-    Pwr5VSensorTask   pwr5vSensor  {"5V Power Supply"   , PWR_5V_SENSE  , &logger, "Voltage", 20.0, 2.0}; // 20Hz, update every 2 seconds
-    Pwr3p3VSensorTask pwr3p3vSensor{"3.3V Power Supply" , PWR_3P3V_SENSE, &logger, "Voltage",  5.0, 1.0}; //  5Hz, update every 1 seconds
-    BME280SensorTask  bme280Sensor {"BME280 Env. Sensor", BME280_BASE   , &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
-    BME680SensorTask  bme680Sensor {"BME680 Env. Sensor", BME280_BASE   , &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
+    //LightSensorTask   lightSensor  {"Ambient Light"     , LIGHT_SENSE   , &logger, "Light"  , 20.0, 2.0}; // 20Hz, update every 2 seconds
+    //Pwr5VSensorTask   pwr5vSensor  {"5V Power Supply"   , PWR_5V_SENSE  , &logger, "Voltage", 20.0, 2.0}; // 20Hz, update every 2 seconds
+    //Pwr3p3VSensorTask pwr3p3vSensor{"3.3V Power Supply" , PWR_3P3V_SENSE, &logger, "Voltage",  5.0, 1.0}; //  5Hz, update every 1 seconds
+    ADCSensorsTask    adcSensors   {"ADC Sensors"       , ADC_BASE   , &logger, "Various", 20.0, 2.0}; // 20Hz, update every 2 seconds
+    BME280SensorTask  bme280Sensor {"BME280 Env. Sensor", BME280_BASE, &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
+
+    // The BME680 software automatically delays 3 seconds per reading.
+    // Reporting is set to every sample period (3 seconds)
+    // Use the report period for saving config and state files (200 * 3 = 10 minutes)
+    BME680SensorTask  bme680Sensor {"BME680 Env. Sensor", BME680_BASE, &logger, "Various", 1.0, 200.0};
 
     // NOTE: Sensor tasks have their own timers to read and average sensor data, then write to DataStore objects.
 
@@ -243,9 +252,10 @@ int main(int argc, char **argv)
 
     // Add tasks
     masterTask.AddAppTask(&ui);
-    masterTask.AddAppTask(&lightSensor);
-    masterTask.AddAppTask(&pwr5vSensor);
-    masterTask.AddAppTask(&pwr3p3vSensor);
+    //masterTask.AddAppTask(&lightSensor);
+    //masterTask.AddAppTask(&pwr5vSensor);
+    //masterTask.AddAppTask(&pwr3p3vSensor);
+    masterTask.AddAppTask(&adcSensors);
     masterTask.AddAppTask(&bme280Sensor);
     masterTask.AddAppTask(&bme680Sensor);
 
@@ -271,49 +281,47 @@ int main(int argc, char **argv)
     //-------------------------------------------------------------------------
 
     // XXX DEBUG - sample system lifecycle
-    int count = 0;
 
     Task::Sleep(1 * 1000);
 
     // This would be the application background in a normal system...
     while (!masterTask.isTerminated() && !gTerminate)
     {
+#if 0
         // ------------------------------------------------
-        switch (count) {
+        switch (gStateCount++) {
         case 1:
-            count++;
             logger.log(eLOG_INFO, "----------------------------------------");
-            logger.log(eLOG_INFO, "main(%d) Pausing system...", count);
+            logger.log(eLOG_INFO, "main(%d) Pausing system...", gStateCount);
             logger.log(eLOG_INFO, "----------------------------------------");
             statTimer.Pause();
             masterTask.PauseSystem();
+            gStateCount++;
             Task::Sleep(5 * 1000);
             break;
 
         case 3:
-            count++;
             logger.log(eLOG_INFO, "----------------------------------------");
-            logger.log(eLOG_INFO, "main(%d) Resuming system...", count);
+            logger.log(eLOG_INFO, "main(%d) Resuming system...", gStateCount);
             logger.log(eLOG_INFO, "----------------------------------------");
             statTimer.Resume();
             masterTask.ContinueSystem();
+            gStateCount++;
             Task::Sleep(5 * 1000);
             break;
 
         case 5:
-            count++;
             logger.log(eLOG_INFO, "----------------------------------------");
-            logger.log(eLOG_INFO, "main(%d) Terminating system...", count);
+            logger.log(eLOG_INFO, "main(%d) Terminating system...", gStateCount);
             logger.log(eLOG_INFO, "----------------------------------------");
             gTerminate = 1; // cause clean shutdown
             break;
 
         default:
-            count++;
             // TODO - Background processing, maybe including CLI...
 
             logger.log(eLOG_INFO, "----------------------------------------");
-            logger.log(eLOG_INFO, "main(%d) Doing work...", count);
+            logger.log(eLOG_INFO, "main(%d) Doing work...", gStateCount);
 
             logger.log(eLOG_INFO, "----------------------------------------");
             logger.log(eLOG_INFO, masterTask.GetSystemInfo());
@@ -322,7 +330,23 @@ int main(int argc, char **argv)
             break;
         }
         // ------------------------------------------------
+#else
+        // ------------------------------------------------
+        Task::Sleep(500);
+        if (++gStateCount >= 10)
+        {
+            logger.log(eLOG_INFO, "----------------------------------------");
+            logger.log(eLOG_INFO, "main() Doing work...");
+            logger.log(eLOG_INFO, "----------------------------------------");
+            logger.log(eLOG_INFO, masterTask.GetSystemInfo());
+            logger.log(eLOG_INFO, "----------------------------------------");
+            gStateCount = 0;
+        }
+        // ------------------------------------------------
+#endif
     } // end while()
+
+    SaveSystemState();
 
     // Main loop terminated - terminate all subtasks.
     masterTask.TerminateSystem();
@@ -463,7 +487,7 @@ const char* FaultString(int signal, int code)
     if (SIGINT==signal)
     {
         return "SIGINT; Terminated by user";
-    };
+    }
 
     if (SIGABRT==signal)
     {
@@ -519,7 +543,7 @@ const char* FaultString(int signal, int code)
             return "External abort";
         }
 #endif
-    };
+    }
 
     return "Unhandled signal handler";
 }
@@ -544,24 +568,30 @@ const char* FaultString(int signal, int code)
  */
 void FaultHandler(int signal, siginfo_t * siginfo, void *context)
 {
-    //  Register the server cleanup function
-    atexit(SaveSystemState);
-
-    //  ^C is not really a fault...
+    // ^C is not really a fault.
+    // Catch it to update system state machine.
     if (signal == SIGINT)
     {
-        std::cerr << "[terminated by user]" << std::endl;
-        exit(signal);
-    };
+        std::cerr << "[interrupted by user]" << std::endl;
+        // Make main loop exit
+        gTerminate = 1;
 
-    //  ...neither is a system terminate signal
+//        // Re-register exception handlers to be able to re-catch ^C
+//        SetupExceptionHandler();
+        return;
+    }
+
+    // A system terminate signal also isn't a fault.
+    // Catch it to gracefully shut down the system.
     if (signal == SIGTERM)
     {
         std::cerr << "[terminated by system]" << std::endl;
-        exit(signal);
-    };
+        // Make main loop exit
+        gTerminate = 1;
+       return;
+    }
 
-    //  Real fault handling
+    // Real fault handling
     const int maxbtsize = 128; // display up to this many back calls
     const int max_line_size = 256; // max no. of chars in each backtrace line
 
@@ -662,54 +692,54 @@ void SetupExceptionHandler()
     if (-1 == sigaction (SIGSEGV, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGSEGV...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGILL, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGILL...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGINT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGINT...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGFPE, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGFPE...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGBUS, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGBUS...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGQUIT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGQUIT...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGABRT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGABRT...)" << std::endl;
-    };
+    }
 
     if (-1 == sigaction (SIGTERM, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGTERM...)" << std::endl;
-    };
+    }
 
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
     if (-1 == sigaction (SIGSTKFLT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGSTKFLT...)" << std::endl;
-    };
+    }
 #endif
 
     if (-1 == sigaction (SIGSYS, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGSSYS...)" << std::endl;
-    };
-};
+    }
+}
 
 //-----------------------------------------------------------------------------

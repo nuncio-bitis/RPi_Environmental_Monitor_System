@@ -64,7 +64,6 @@
 static const uint32_t gDelay = 2000; // Delay in readings, milliseconds
 
 #define DESTZONE "TZ=EST5EDT"
-static const char *dev_name = "/dev/i2c-1";
 
 #ifdef BME280_FLOAT_ENABLE
 // Offsets based on Eve Weather sensor
@@ -318,7 +317,7 @@ int main(int argc, char* argv[])
     if (mI2Cport->openI2C() < 0)
     {
         perror("openI2C");
-        fprintf(stderr, "Failed to open the I2C bus %s\n", dev_name);
+        fprintf(stderr, "Failed to open the I2C bus %s\n", I2C1DeviceName);
         exit(1);
     }
 

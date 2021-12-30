@@ -22,7 +22,10 @@ add_subdirectory (sensors)
 # To build the user interface
 add_subdirectory (ui)
 
+link_directories(${PROJECT_SOURCE_DIR}/hardware ${PROJECT_SOURCE_DIR}/../../C-Projects/Tools/bin)
+
 find_library(cppTools cpp_tools PATHS ${PROJECT_SOURCE_DIR}/../../C-Projects/Tools/bin)
+find_library(algobsec algobsec PATHS ${PROJECT_SOURCE_DIR}/../hardware)
 
 add_executable(EnvironmentMonitor
     EnvironmentMonitor.cpp
@@ -30,7 +33,7 @@ add_executable(EnvironmentMonitor
     MasterTask.cpp
 )
 
-target_link_libraries(EnvironmentMonitor PUBLIC pthread ${cppTools} hardware sensors ui )
+target_link_libraries(EnvironmentMonitor PUBLIC pthread ${cppTools} sensors ui hardware algobsec )
 
 target_include_directories(EnvironmentMonitor PUBLIC
     /opt/homebrew/include

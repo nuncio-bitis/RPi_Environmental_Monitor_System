@@ -29,6 +29,9 @@ THE SOFTWARE.
 #include <stdint.h>
 #include <stddef.h>
 
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
+
 // -----------------------------------------------------------------------------
 // Include debug print statements
 // See the CMakeLists.txt file to enable/disable

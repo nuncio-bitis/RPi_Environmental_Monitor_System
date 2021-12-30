@@ -47,6 +47,7 @@ private:
     // Work function of the sensor task.
     void Entry(void) override;
 
+    void UpdateItem(DataItem<uint32_t> *item);
     void UpdateItem(DataItem<uint64_t> *item);
     void UpdateItem(DataItem<double> *item);
 
@@ -76,21 +77,21 @@ private:
     long cpu_mem_free_tok;
     long cpu_temp_tok;
 
-    long ambientLight;
-    long pwr5v;
-    long pwr3p3v;
+    long ambientLight_tok;
+    long pwr5v_tok;
+    long pwr3p3v_tok;
 
-    long bme280Temp;
-    long bme280RelHum;
-    long bme280Pressure;
+    long bme280Temp_tok;
+    long bme280RelHum_tok;
+    long bme280Pressure_tok;
 
-    long bme680Temp;
-    long bme680RelHum;
-    long bme680Pressure;
-    long bme680GasResistance;
-    long bme680IAQaccuracy;
-    long bme680IAQ;
-}
+    long bme680Temp_tok;
+    long bme680RelHum_tok;
+    long bme680Pressure_tok;
+    long bme680GasResistance_tok;
+    long bme680IAQaccuracy_tok;
+    long bme680IAQ_tok;
+};
 
 // ****************************************************************************
 #endif /* UITASK_H_ */

@@ -50,22 +50,22 @@ DataStore::DataStore()
     m_DataItemList[CPU_TEMP]     = new DataItem<double>("CPU_Temp", "︒C", CPU_TEMP, 0, -40.0, 80.0, 5000);
 
     // ADS1115 ADC sensors
-    m_DataItemList[LIGHT_SENSE   ] = new DataItem<double>("Ambient_Light", "V", LIGHT_SENSE   , 0.0, 0.0, 6.0, 1000);
-    m_DataItemList[PWR_5V_SENSE  ] = new DataItem<double>("Pwr_5V"       , "V", PWR_5V_SENSE  , 0.0, 0.0, 6.0, 10000);
-    m_DataItemList[PWR_3P3V_SENSE] = new DataItem<double>("Pwr_3p3V"     , "V", PWR_3P3V_SENSE, 0.0, 0.0, 6.0, 10000);
+    m_DataItemList[LIGHT_SENSE   ] = new DataItem<double>("Ambient_Light", "mV", LIGHT_SENSE   , 0.0, 0.0, 5500.0, 1000);
+    m_DataItemList[PWR_5V_SENSE  ] = new DataItem<double>("Pwr_5V"       , "mV", PWR_5V_SENSE  , 0.0, 4500.0, 5500.0, 10000);
+    m_DataItemList[PWR_3P3V_SENSE] = new DataItem<double>("Pwr_3p3V"     , "mV", PWR_3P3V_SENSE, 0.0, 3000.0, 3500.0, 10000);
 
     // BME280 sensor items
-    m_DataItemList[BME280_TEMP   ] = new DataItem<double>("BME280_Ambient_Temp", "︒C"  , BME280_TEMP , 0.0, 0.0, 100.0, 5000);
-    m_DataItemList[BME280_RHUM   ] = new DataItem<double>("BME280_Rel_Humidity", "%"   , BME280_RHUM , 0.0, 0.0, 100.0, 5000);
-    m_DataItemList[BME280_PRESS  ] = new DataItem<double>("BME280_Pressure"    , "inHg", BME280_PRESS, 0.0, 13.0, 20.0, 5000);
+    m_DataItemList[BME280_TEMPERATURE] = new DataItem<double>("BME280_Ambient_Temp", "︒F"  , BME280_TEMPERATURE , 0.0, 0.0, 100.0, 5000);
+    m_DataItemList[BME280_RHUM   ] = new DataItem<double>("BME280_Rel_Humidity", "%"   , BME280_RHUM , 0.0, 30.0, 100.0, 5000);
+    m_DataItemList[BME280_PRESSURE] = new DataItem<double>("BME280_Pressure"    , "inHg", BME280_PRESSURE, 0.0, 26.0, 32.0, 5000);
 
     // BME680 sensor items
-    m_DataItemList[BME680_TEMP   ] = new DataItem<double>("BME680_Ambient_Temp"  , "︒C"  , BME680_TEMP  , 0.0, 0.0, 100.0, 5000);
-    m_DataItemList[BME680_RHUM   ] = new DataItem<double>("BME680_Rel_Humidity"  , "%"   , BME680_RHUM  , 0.0, 0.0, 100.0, 5000);
-    m_DataItemList[BME680_PRESS  ] = new DataItem<double>("BME680_Pressure"      , "inHg", BME680_PRESS , 0.0, 13.0, 20.0, 5000);
-    m_DataItemList[BME680_GASRES ] = new DataItem<double>("BME680_Gas_Resistance", "Ohms", BME680_GASRES, 0.0, 0.0, 100.0e03, 5000);
-    m_DataItemList[BME680_IAQA   ] = new DataItem<uint32_t>("BME680_IAQ_Accuracy", ""    , BME680_IAQA  , 0.0, 0, 3, 5000);
-    m_DataItemList[BME680_IAQ    ] = new DataItem<double>("BME680_IAQ"           , ""    , BME680_IAQ   , 0.0, 0.0, 1000.0, 5000);
+    m_DataItemList[BME680_TEMPERATURE] = new DataItem<double>("BME680_Ambient_Temp"  , "︒F"  , BME680_TEMPERATURE  , 0.0, 0.0, 100.0, 6000);
+    m_DataItemList[BME680_RHUM   ] = new DataItem<double>("BME680_Rel_Humidity"  , "%"   , BME680_RHUM  , 0.0, 30.0, 100.0, 6000);
+    m_DataItemList[BME680_PRESSURE] = new DataItem<double>("BME680_Pressure"      , "inHg", BME680_PRESSURE , 0.0, 26.0, 32.0, 6000);
+    m_DataItemList[BME680_GASRES ] = new DataItem<double>("BME680_Gas_Resistance", "Ohms", BME680_GASRES, 0.0, 0.0, 200.0e03, 6000);
+    m_DataItemList[BME680_IAQA   ] = new DataItem<uint32_t>("BME680_IAQ_Accuracy", ""    , BME680_IAQA  , 99, 0, 3, 6000);
+    m_DataItemList[BME680_IAQ    ] = new DataItem<double>("BME680_IAQ"           , ""    , BME680_IAQ   , 0.0, 0.0, 1000.0, 6000);
 }
 
 DataStore::~DataStore()

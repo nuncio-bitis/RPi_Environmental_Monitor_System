@@ -16,6 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Configured options and settings for SigGen
+// Configured options and settings for this project.
 #define EnvironmentMonitor_VERSION_MAJOR 1
 #define EnvironmentMonitor_VERSION_MINOR 0

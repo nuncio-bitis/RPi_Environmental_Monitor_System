@@ -55,16 +55,12 @@ RPi_Environmental_Monitor_System
   │   |-- include
   │   │   |-- BME280Sensor.h
   │   │   |-- BME680Sensor.h
-  │   │   |-- LightSensor.h
-  │   │   |-- Pwr_3p3V_Sensor.h
-  │   │   `-- Pwr_5V_Sensor.h
+  │   │   `-- ADC_Sensors.h
   │   |-- README.md
   │   `-- source
   │       |-- BME280Sensor.cpp
   │       |-- BME680Sensor.cpp
-  │       |-- LightSensor.cpp
-  │       |-- Pwr_3p3V_Sensor.cpp
-  │       `-- Pwr_5V_Sensor.cpp
+  │       `-- ADC_Sensors.cpp
   |-- test
   |   |-- Makefile
   |   |-- test_ADS1115_differential
