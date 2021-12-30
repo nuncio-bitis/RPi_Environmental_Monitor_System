@@ -173,35 +173,10 @@ void UITask::UpdateItem(DataItem<double> *item)
 // Update the UI when a data item has been updated.
 void UITask::DataItemUpdated(int id)
 {
-    DataItemPublisher* pdi = DataStore::GetDataItem((DataItemId)id);
-//    DataItem<double> *pdi = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem((DataItemId)id));
-    m_pLog->log(eLOG_DEBUG, "[UI] Data Item '%s' (%d) update detected.", pdi->name().c_str(), id);
-/*
-    switch (id) {
-    case CPU_MEM_FREE:
-    {
-        UpdateItem(cpu_mem_free);
-        break;
-    }
+//    DataItemPublisher* pdi = DataStore::GetDataItem((DataItemId)id);
+//    m_pLog->log(eLOG_DEBUG, "[UI] Data Item '%s' (%d) update detected.", pdi->name().c_str(), id);
 
-    // These are all the same type, so it's easy to make generic code.
-    case CPU_TEMP:
-    case TEMP_SENSE_1:
-    case TEMP_SENSE_2:
-    case PRESSURE1:
-    case PRESSURE2:
-    case FLOW1:
-    case FLOW2:
-    {
-        DataItem<double> *pdi = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem((DataItemId)id));
-        UpdateItem(pdi);
-        break;
-    }
-
-    default:
-        break;
-    }
-*/
+    // TODO Update value on UI
 }
 
 // ****************************************************************************
@@ -241,25 +216,49 @@ void UITask::Entry()
         }
 
         // --------------------------------------------
-        // TODO Task work - pull values from data store to update display.
+        // Task work - pull values from data store to update log file.
+        // Note this is separate from DataItemUpdated() being called when data is updated.
+        // That's also when the UI display should be updated.
 
-        static int count = 0;
-
+        // 100ms wait every cycle.
         Sleep(100);
-        if (++count >= 10) {
-            // About every 1 second...
-            count = 0;
 
-            // Unconditionally report data every update period.
-            // Note this is separate from DataItemUpdated() being called when data is updated.
+        static uint32_t count1 = 0;
+        static uint32_t count2 = 0;
+        static uint32_t count3 = 0;
+
+        // [1] Update these every 10 seconds
+        if (++count1 >= (10 * 10))
+        {
+            count1 = 0;
+
+            // CPU items
             UpdateItem(cpu_mem_free);
             UpdateItem(cpu_temp);
+        }
+
+        // [2] Update these every 1 minute
+        if (++count2 >= (1 * 60 * 10))
+        {
+            count2 = 0;
+
+            // ADC items
             UpdateItem(ambientLight);
             UpdateItem(pwr5v);
             UpdateItem(pwr3p3v);
+        }
+
+        // [3] Update these every 15 minutes
+        if (++count3 >= (15 * 60 * 10))
+        {
+            count3 = 0;
+
+            // BME280 items
             UpdateItem(bme280Temp);
             UpdateItem(bme280RelHum);
             UpdateItem(bme280Pressure);
+
+            // BME680 items
             UpdateItem(bme680Temp);
             UpdateItem(bme680RelHum);
             UpdateItem(bme680Pressure);
@@ -267,6 +266,7 @@ void UITask::Entry()
             UpdateItem(bme680IAQaccuracy);
             UpdateItem(bme680IAQ);
         }
+
         // --------------------------------------------
 
         // PAUSED: Must wait to be told to continue.

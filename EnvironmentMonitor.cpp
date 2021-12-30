@@ -235,9 +235,8 @@ int main(int argc, char **argv)
     BME280SensorTask  bme280Sensor {"BME280 Env. Sensor", BME280_BASE, &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
 
     // The BME680 software automatically delays 3 seconds per reading.
-    // Reporting is set to every sample period (3 seconds)
-    // Use the report period for saving config and state files (200 * 3 = 10 minutes)
-    BME680SensorTask  bme680Sensor {"BME680 Env. Sensor", BME680_BASE, &logger, "Various", 1.0, 200.0};
+    // Reporting is done on every sample period.
+    BME680SensorTask  bme680Sensor {"BME680 Env. Sensor", BME680_BASE, &logger, "Various", 1.0, 1.0};
 
     // NOTE: Sensor tasks have their own timers to read and average sensor data, then write to DataStore objects.
 
@@ -333,7 +332,7 @@ int main(int argc, char **argv)
 #else
         // ------------------------------------------------
         Task::Sleep(500);
-        if (++gStateCount >= 10)
+        if (++gStateCount >= (30 * 2))
         {
             logger.log(eLOG_INFO, "----------------------------------------");
             logger.log(eLOG_INFO, "main() Doing work...");

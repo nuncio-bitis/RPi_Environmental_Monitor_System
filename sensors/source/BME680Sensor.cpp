@@ -66,7 +66,7 @@ BME680SensorTask::BME680SensorTask(const std::string name, DataItemId id, Logger
     m_pLog(pLog),
     m_type(type),
     m_sampleFreq(sampleFreq),
-    m_reportPeriod(reportPeriod),
+    m_reportPeriod(reportPeriod), // Not used. Reporting data every sample period.
     m_samplesPerReport(sampleFreq * reportPeriod),
     m_sampleCount(0),
     pTemp_DI(nullptr),
@@ -136,10 +136,10 @@ void BME680SensorTask::Entry()
     }
 
     // ------------------------------------------------
+    // Set up for the main (endless) loop that queries sensor settings,
+    // applies them, and processes the measured data.
 
-    // Set up for the main (endless) loop that queries sensor settings, applies them, and processes the measured data.
-    // State is saved every 10000 samples, which means every 10000 * 3 secs = 500 minutes (8 hrs 20 min)
-    // State is saved every 15 minutes, which means every 900 / 3 = 300 samples
+    // Save state every 15 minutes, which means every 900 / 3 = 300 samples
     const uint32_t save_intvl = 300;
 
     /* Timestamp variables */
@@ -174,13 +174,6 @@ void BME680SensorTask::Entry()
 
     // NOTE: Stale times were set up in DataStore.cpp when the items were created.
     // All data items have the same sample frequency and report period.
-    // Set stale time in milliseconds; 6 seconds (2 x the sample frequency)
-//    pTemp_DI->setStaleTime(6 * 1000);
-//    pRelHum_DI->setStaleTime(6 * 1000);
-//    pPressure_DI->setStaleTime(6 * 1000);
-//    pGasResistance_DI->setStaleTime(6 * 1000);
-//    pIAQA_DI->setStaleTime(6 * 1000);
-//    pIAQ_DI->setStaleTime(6 * 1000);
 
     // ------------------------------------------------
 
@@ -223,8 +216,8 @@ void BME680SensorTask::Entry()
 
         // --------------------------------------------
 
-        // Use report period for updating state and config files.
-        if (++m_sampleCount >= m_samplesPerReport)
+        // Update state and config files.
+        if (++m_sampleCount >= save_intvl)
         {
             bsec_status = bsec_get_state(0, bsec_state, sizeof(bsec_state), work_buffer, sizeof(work_buffer), &bsec_state_len);
             if (bsec_status == BSEC_OK)
