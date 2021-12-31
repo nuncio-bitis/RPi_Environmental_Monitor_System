@@ -49,6 +49,7 @@
 
 #include "MasterTask.h"
 #include "UITask.h"
+#include "DataLog.h"
 
 //#include "LightSensor.h"
 //#include "Pwr_5V_Sensor.h"
@@ -222,7 +223,9 @@ int main(int argc, char **argv)
 
     // Create all system task objects
     // General task parameters: name, id, *Logger
+
     UITask ui{"User Interface", UI_TASK_ID, &logger};
+    DataLogTask dataLog{"Data Log", DATA_LOG_TASK_ID, &logger};
 
     // Define sensor tasks (Type = flow, pressure, temperature, light, humidity, etc.)
     // Note the Data ID (DID) doubles as a task ID.
@@ -251,6 +254,7 @@ int main(int argc, char **argv)
 
     // Add tasks
     masterTask.AddAppTask(&ui);
+    masterTask.AddAppTask(&dataLog);
     //masterTask.AddAppTask(&lightSensor);
     //masterTask.AddAppTask(&pwr5vSensor);
     //masterTask.AddAppTask(&pwr3p3vSensor);

@@ -58,6 +58,7 @@ enum DataItemId {
     BME680_IAQ,
 
     UI_TASK_ID,
+    DATA_LOG_TASK_ID,
 
     NUM_DATA_ITEMS
 };

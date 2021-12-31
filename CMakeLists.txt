@@ -33,7 +33,7 @@ add_executable(EnvironmentMonitor
     MasterTask.cpp
 )
 
-target_link_libraries(EnvironmentMonitor PUBLIC pthread ${cppTools} sensors ui hardware algobsec )
+target_link_libraries(EnvironmentMonitor PUBLIC pthread ${cppTools} sensors ui hardware algobsec stdc++fs )
 
 target_include_directories(EnvironmentMonitor PUBLIC
     /opt/homebrew/include
