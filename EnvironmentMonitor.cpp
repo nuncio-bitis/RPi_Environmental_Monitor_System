@@ -338,7 +338,7 @@ int main(int argc, char **argv)
         if (++gStateCount >= (60 * 2))
         {
             logger.log(eLOG_INFO, "----------------------------------------");
-            logger.log(eLOG_INFO, "main() Doing work...");
+            logger.log(eLOG_INFO, "main() Getting system info...");
             logger.log(eLOG_INFO, "----------------------------------------");
             logger.log(eLOG_INFO, masterTask.GetSystemInfo());
             logger.log(eLOG_INFO, "----------------------------------------");
