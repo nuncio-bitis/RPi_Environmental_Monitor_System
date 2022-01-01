@@ -283,14 +283,13 @@ int main(int argc, char **argv)
 
     //-------------------------------------------------------------------------
 
-    // XXX DEBUG - sample system lifecycle
-
     Task::Sleep(1 * 1000);
 
     // This would be the application background in a normal system...
     while (!masterTask.isTerminated() && !gTerminate)
     {
 #if 0
+        // DEBUG - sample system lifecycle
         // ------------------------------------------------
         switch (gStateCount++) {
         case 1:
@@ -336,7 +335,7 @@ int main(int argc, char **argv)
 #else
         // ------------------------------------------------
         Task::Sleep(500);
-        if (++gStateCount >= (30 * 2))
+        if (++gStateCount >= (60 * 2))
         {
             logger.log(eLOG_INFO, "----------------------------------------");
             logger.log(eLOG_INFO, "main() Doing work...");
@@ -358,7 +357,6 @@ int main(int argc, char **argv)
     logger.log(eLOG_INFO, "----------------------------------------");
     logger.log(eLOG_INFO, masterTask.GetSystemInfo());
     logger.log(eLOG_INFO, "----------------------------------------");
-    // XXX DEBUG
 
     statTimer.Stop();
 
@@ -377,7 +375,7 @@ int main(int argc, char **argv)
 //-----------------------------------------------------------------------------
 
 
-//! Save system device state
+// Save system device state
 void SaveSystemState(void)
 {
     // Make main loop exit

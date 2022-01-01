@@ -65,7 +65,7 @@ private:
     DataItem<double>   *pIAQ_DI;
 
     // I2C port for reading and writing.
-    // Needs to be static for bus_read and bus_write
+    // Needs to be static for bus_read and bus_write (BSEC C library)
     static I2Cdev * pI2Cport;
 
     static const char *configFile; // = "../data/config.bin";
@@ -73,11 +73,13 @@ private:
 
 #ifdef BME68X_USE_FPU
     // Offsets based on Eve Weather sensor
+    // These need to be static for the BSEC C library
     static const double tempOffset;
     static const double humOffset;
     static const double pressOffset;
 #endif
 
+    // These need to be static for the BSEC C library
     static double   temp_current;
     static double   rh_current;
     static double   press_current;
@@ -89,6 +91,8 @@ private:
     void Entry(void) override;
 
     int64_t get_timestamp_ns(void);
+
+    // These need to be static for the BSEC C library
     static void output_ready(
         int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,
         float pressure, float raw_temperature, float raw_humidity, float gas, bsec_library_return_t bsec_status,
@@ -99,8 +103,7 @@ private:
     static void SaveConfig(void);
     static void SaveState(void);
 
-
-    // These need to be static to store pointers in dev.
+    // These need to be static for the BSEC C library (bsec_iot_init call)
     static BME68X_INTF_RET_TYPE bus_read(uint8_t reg_addr, uint8_t *reg_data_ptr, uint32_t data_len, void *intf_ptr);
     static BME68X_INTF_RET_TYPE bus_write(uint8_t reg_addr, const uint8_t *reg_data_ptr, uint32_t data_len, void *intf_ptr);
 };
