@@ -87,7 +87,7 @@ void DataLogTask::OpenDataLog(void)
         // File exists and is now open for append. Nothing more needs to be done.
         // Create a noticeable human-readable gap in the data to indicate the
         // system has been restarted.
-        dataLogFile << m_pLog->TimeStamp() << " '" << GetName() << "' restarted." << std::endl;
+        dataLogFile << m_pLog->TimeStamp() << ", '" << GetName() << "' restarted." << std::endl;
         dataLogFile.close();
     }
     else
