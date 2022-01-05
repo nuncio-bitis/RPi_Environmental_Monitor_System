@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name and version
-project(EnvironmentMonitor VERSION 1.0)
+project(EnvironmentMonitor VERSION 1.5)
 
 configure_file(EnvironmentMonitor.h.in ${PROJECT_SOURCE_DIR}/EnvironmentMonitor.h)
 
