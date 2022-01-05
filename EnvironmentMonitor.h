@@ -18,4 +18,4 @@
 
 // Configured options and settings for this project.
 #define EnvironmentMonitor_VERSION_MAJOR 1
-#define EnvironmentMonitor_VERSION_MINOR 0
+#define EnvironmentMonitor_VERSION_MINOR 5
