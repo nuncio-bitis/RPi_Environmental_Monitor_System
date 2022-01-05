@@ -13,7 +13,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 add_library(ui
     source/UITask.cpp
     source/DataLog.cpp
-    # TODO
     )
 
 install(TARGETS ui DESTINATION "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" )
