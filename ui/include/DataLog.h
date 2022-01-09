@@ -59,7 +59,7 @@ private:
     Logger* m_pLog;
 
     // Name and path of file containing the data log.
-    const std::string csvFilePath = "../data/Environment_Data.csv";
+    const std::string csvFilePath = "../data/EnvironmentDataLog.csv";
     std::ofstream dataLogFile;
 
     // Pointers to data store objects
