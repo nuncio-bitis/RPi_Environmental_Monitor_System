@@ -39,15 +39,17 @@ COMPILER = g++
 CXX      = g++
 CC       = g++
 LINK     = g++
-INCLUDES = -I../hardware/include
+INCLUDES = -I. -I../hardware/include
 THREADS  = -lpthread -lrt
+
+OBJECTS  = Debug.o
 
 DEFINES  = -D DEBUG_CONSOLE
 
 LIBDIRS = -L ../hardware
 LIBS = $(THREADS) -lhardware
 
-LDFLAGS  =  $(LIBDIRS) $(LIBS)
+LDFLAGS  = $(LIBDIRS) $(LIBS)
 
 CXXFLAGS = -O2 -g -Wall -fmessage-length=0 $(GCC_STD) $(INCLUDES) $(DEFINES)
 
@@ -75,22 +77,22 @@ all: begin $(TARGETS)
 	@echo
 
 # All target executables depend on these library files.
-$(TARGETS) :  $(LIBFILES)
+$(TARGETS) : $(LIBFILES)
 
-test_ADS1115_single: test_ADS1115_single.cpp
-	${CXX} ${CXXFLAGS} -o $@ $< ${LDFLAGS}
+test_ADS1115_single: test_ADS1115_single.cpp $(OBJECTS)
+	${CXX} ${CXXFLAGS} -o $@ $< $(OBJECTS) ${LDFLAGS}
 	@echo
 
-test_ADS1115_differential: test_ADS1115_differential.cpp
-	${CXX} ${CXXFLAGS} -o $@ $< ${LDFLAGS}
+test_ADS1115_differential: test_ADS1115_differential.cpp $(OBJECTS)
+	${CXX} ${CXXFLAGS} -o $@ $< $(OBJECTS) ${LDFLAGS}
 	@echo
 
-test_bme280: test_bme280.cpp
-	${CXX} ${CXXFLAGS} -o $@ $< ${LDFLAGS} -lwiringPi
+test_bme280: test_bme280.cpp $(OBJECTS)
+	${CXX} ${CXXFLAGS} -o $@ $< $(OBJECTS) ${LDFLAGS} -lwiringPi
 	@echo
 
-test_bsec_rpi: test_bsec_rpi.cpp
-	${CXX} ${CXXFLAGS} -o $@ $< -lalgobsec ${LDFLAGS} -lwiringPi -lm
+test_bsec_rpi: test_bsec_rpi.cpp $(OBJECTS)
+	${CXX} ${CXXFLAGS} -o $@ $< $(OBJECTS) -lalgobsec ${LDFLAGS} -lwiringPi -lm
 	@echo
 
 ################################################################################
