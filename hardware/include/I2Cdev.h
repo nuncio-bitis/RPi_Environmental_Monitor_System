@@ -33,15 +33,6 @@ THE SOFTWARE.
 #include <sys/ioctl.h>
 
 // -----------------------------------------------------------------------------
-// Include debug print statements
-// See the CMakeLists.txt file to enable/disable
-// -----------------------------------------------------------------------------
-//#define I2CDEV_DEBUG
-#ifdef I2CDEV_DEBUG
-    #include "Debug.h"
-#endif // I2CDEV_DEBUG
-
-// -----------------------------------------------------------------------------
 
 #define I2C1DeviceName "/dev/i2c-1"
 #define I2CDEV_DEFAULT_READ_TIMEOUT 10 // max retries

@@ -34,7 +34,6 @@ RPi_Environmental_Monitor_System
   |   |-- CMakeLists.txt
   |   |-- include
   |   |   |-- ADS1115.h
-  |   |   |-- Debug.h
   |   |   |-- I2Cdev.h
   |   |   |-- bme280.h
   |   |   |-- bme280_defs.h
@@ -46,7 +45,6 @@ RPi_Environmental_Monitor_System
   |   |-- libalgobsec.a : Externally-provided BME680/BSEC library
   |   `-- source
   |       |-- ADS1115.cpp
-  |       |-- Debug.cpp
   |       |-- I2Cdev.cpp
   |       |-- bme280.cpp
   |       |-- bme68x.cpp
