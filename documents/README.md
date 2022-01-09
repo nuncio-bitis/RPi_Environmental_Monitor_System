@@ -7,12 +7,10 @@ Sample software system used to monitor data from various sensors attached to a R
 
 ```text
 RPi_Environmental_Monitor_System
-  |-- CMakeLists.txt
   |-- DataStore.cpp
   |-- DataStore.h
   |-- EnvironmentMonitor.cpp : main program
   |-- EnvironmentMonitor.h.in
-  |-- LICENSE
   |-- Makefile
   |-- MasterTask.cpp
   |-- MasterTask.h
@@ -23,12 +21,15 @@ RPi_Environmental_Monitor_System
   |   |-- config.bin : Used by BME680/BSEC library
   |   `-- state.bin : Used by BME680/BSEC library
   |-- documents
+  |   |-- BoardSchematic.drawio
+  |   |-- BoardSchematic.png
   |   |-- LICENSE
   |   |-- LICENSE-BME280
   |   |-- README-BME280.md
   |   |-- README-BME68x-Sensor-API.md
   |   |-- README.md
-  |   `-- RPiEnvMonSys_SW_Architecture.drawio
+  |   |-- RPiEnvMonSys_SW_Architecture.drawio
+  |   `-- RPiEnvMonSys_SW_Architecture.png
   |-- hardware
   |   |-- CMakeLists.txt
   |   |-- include
@@ -51,7 +52,6 @@ RPi_Environmental_Monitor_System
   |       |-- bme68x.cpp
   |       `-- bsec_integration.cpp
   |-- sensors
-  │   |-- CMakeLists.txt
   │   |-- include
   │   │   |-- BME280Sensor.h
   │   │   |-- BME680Sensor.h
@@ -62,19 +62,16 @@ RPi_Environmental_Monitor_System
   │       |-- BME680Sensor.cpp
   │       `-- ADC_Sensors.cpp
   |-- test
-  |   |-- Makefile
-  |   |-- test_ADS1115_differential
   |   |-- test_ADS1115_differential.cpp
-  |   |-- test_ADS1115_single
   |   |-- test_ADS1115_single.cpp
-  |   |-- test_bme280
   |   |-- test_bme280.cpp
-  |   |-- test_bsec_rpi
   |   `-- test_bsec_rpi.cpp
   `-- ui
       |-- include
+      |   |-- DataLog.h
       |   `-- UITask.h
       `-- source
+      |   |-- DataLog.cpp
           `-- UITask.cpp
 ```
 
@@ -103,3 +100,7 @@ An Alarm Handler (TBD/TODO) can be used for reporting/logging system error condi
 The System Log contains as much or as little system information as desired, depending on the log level the system is configured for (Critical, High, Medium, Low, Info, Debug). By default, the system would normally be set to allow as low as Low or Info levels. For develpment, the Debug level is recommended.  
 Multiple loggers can be used for various reasons, such as to maintain a separate log file for each type of data, or for multiple parts of the system.
 
+## Board Schematic
+
+![Board Schematic](BoardSchematic%2Edrawio)  
+![Board Schematic](BoardSchematic%2Epng)  
