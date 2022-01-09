@@ -20,7 +20,6 @@ add_library(hardware
     source/bme68x.cpp
     source/bme280.cpp
     source/bsec_integration.cpp
-    source/Debug.cpp
     source/I2Cdev.cpp )
 install(TARGETS hardware DESTINATION "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" )
 
