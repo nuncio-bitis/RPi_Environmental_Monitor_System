@@ -64,7 +64,7 @@ void setup()
     adc0.showConfigRegister();
 
     // We're going to do continuous sampling
-    printf("setMode(ADS1115_MODE_CONTINUOUS)...\n"); // XXX
+    printf("setMode(ADS1115_MODE_CONTINUOUS)...\n"); // @XXX
     adc0.setMode(ADS1115_MODE_CONTINUOUS);
 }
 
@@ -80,10 +80,10 @@ int main(int argc, char *argv[])
         // Sensor is on P0/N1 (pins 4/5)
         mDebug.println("Sensor 1 ************************");
         // Set the gain (PGA) +/- 0.256v
-        printf("setGain(ADS1115_PGA_0P256)...\n"); // XXX
+        printf("setGain(ADS1115_PGA_0P256)...\n"); // @XXX
         adc0.setGain(ADS1115_PGA_0P256);
 
-        printf("setMultiplexer(ADS1115_MUX_P1_N0)...\n"); // XXX
+        printf("setMultiplexer(ADS1115_MUX_P1_N0)...\n"); // @XXX
 
         // Get the number of counts of the accumulator
         mDebug.print("Counts for sensor 1 is: ");
@@ -102,11 +102,11 @@ int main(int argc, char *argv[])
         // 2nd sensor is on P2/N3 (pins 6/7)
         mDebug.println("Sensor 2 ************************");
         // Set the gain (PGA) +/- 6.144v
-        printf("setGain(ADS1115_PGA_6P144)...\n"); // XXX
+        printf("setGain(ADS1115_PGA_6P144)...\n"); // @XXX
         adc0.setGain(ADS1115_PGA_6P144);
 
         // Manually set the MUX  // could have used the getConversionP* above
-        printf("setMultiplexer(ADS1115_MUX_P2_N3)...\n"); // XXX
+        printf("setMultiplexer(ADS1115_MUX_P2_N3)...\n"); // @XXX
         adc0.setMultiplexer(ADS1115_MUX_P2_N3);
 
         mDebug.print("Counts for sensor 2 is: ");

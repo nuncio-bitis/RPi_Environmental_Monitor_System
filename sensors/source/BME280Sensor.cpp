@@ -239,7 +239,7 @@ void BME280SensorTask::Entry()
         // PAUSED: Must wait to be told to continue.
         if (isPaused())
         {
-            // TODO Pause data-gathering timer
+            // @TODO Pause data-gathering timer
 
             m_pLog->log(eLOG_DEBUG, "--- %s Paused", GetName().c_str());
             waitForContinue();
@@ -250,7 +250,7 @@ void BME280SensorTask::Entry()
     } // end while running
 
     // ------------------------------------------------
-    // TODO Task cleanup before exit
+    // @TODO Task cleanup before exit
     m_pLog->log(eLOG_DEBUG, "%s.%s : CLEANUP", GetName().c_str(), __FUNCTION__);
     // ------------------------------------------------
 }

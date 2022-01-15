@@ -18,7 +18,7 @@
 
 // ============================================================================
 // ADS1115 I2C device class
-// Note that the ADS1115 uses 16-bit registers, not 8-bit registers.
+// @NOTE that the ADS1115 uses 16-bit registers, not 8-bit registers.
 // ============================================================================
 
 #include <stdio.h>
@@ -590,7 +590,7 @@ void ADS1115::setHighThreshold(int16_t threshold)
 /** Configures ALERT/RDY pin as a conversion ready pin.
  *  It does this by setting the MSB of the high threshold register to '1' and the MSB
  *  of the low threshold register to '0'. COMP_POL and COMP_QUE bits will be set to '0'.
- *  Note: ALERT/RDY pin requires a pull up resistor.
+ *  @NOTE: ALERT/RDY pin requires a pull up resistor.
  */
 void ADS1115::setConversionReadyPinMode()
 {

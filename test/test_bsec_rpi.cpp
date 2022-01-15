@@ -716,7 +716,7 @@ int main(int argc, char *argv[] )
 
         /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
         bsec_sensor_control(time_stamp, &sensor_settings);
-        if (0) { // XXX
+        if (0) { // @XXX
             printf("bsec_sensor_control(): sensor_settings\n");
             printf("  next_call                %lld\n", sensor_settings.next_call              );
             printf("  process_data             0x%02X\n", sensor_settings.process_data         );
@@ -727,7 +727,7 @@ int main(int argc, char *argv[] )
             printf("  temperature_oversampling %d\n", sensor_settings.temperature_oversampling );
             printf("  humidity_oversampling    %d\n", sensor_settings.humidity_oversampling    );
             printf("  trigger_measurement      %d\n", sensor_settings.trigger_measurement      );
-        } // XXX
+        } // @XXX
 
         /* Trigger a measurement if necessary */
         bme680_bsec_trigger_measurement(&sensor_settings);

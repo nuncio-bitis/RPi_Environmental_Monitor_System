@@ -115,7 +115,7 @@ void LightSensorTask::Entry()
         // PAUSED: Must wait to be told to continue.
         if (isPaused())
         {
-            // TODO Pause data-gathering timer
+            // @TODO Pause data-gathering timer
 
             m_pLog->log(eLOG_DEBUG, "--- %s Paused", GetName().c_str());
             waitForContinue();
@@ -152,7 +152,7 @@ void LightSensorTask::Setup()
     pADC0->setRate(ADS1115_RATE_250);
 
     // Set the gain (PGA) +/- 6.144V
-    // Note that any analog input must be higher than –0.3V and less than VDD +0.3
+    // @NOTE that any analog input must be higher than –0.3V and less than VDD +0.3
     //m_pLog->log(eLOG_DEBUG, "%s: setGain(ADS1115_PGA_6P144)...", GetName().c_str());
     pADC0->setGain(ADS1115_PGA_6P144);
     // ALERT/RDY pin will indicate when conversion is ready

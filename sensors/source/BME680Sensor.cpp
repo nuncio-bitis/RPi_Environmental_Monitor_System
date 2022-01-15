@@ -172,7 +172,7 @@ void BME680SensorTask::Entry()
     pIAQA_DI          = dynamic_cast<DataItem<uint32_t> *>(DataStore::getInstance()->GetDataItem(BME680_IAQA));
     pIAQ_DI           = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(BME680_IAQ));
 
-    // NOTE: Stale times were set up in DataStore.cpp when the items were created.
+    // @NOTE: Stale times were set up in DataStore.cpp when the items were created.
     // All data items have the same sample frequency and report period.
 
     // ------------------------------------------------
@@ -212,7 +212,7 @@ void BME680SensorTask::Entry()
 
         pIAQA_DI->setValue(iaqa_current);
 //        DataItemState st = pIAQA_DI->getState();
-//        printf("*** Set IAQ Accuracy: %d, state=%d\n", iaqa_current, st); // XXX
+//        printf("*** Set IAQ Accuracy: %d, state=%d\n", iaqa_current, st); // @XXX
 
         // --------------------------------------------
 

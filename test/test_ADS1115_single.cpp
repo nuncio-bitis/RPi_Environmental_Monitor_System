@@ -66,16 +66,16 @@ void setup()
     mDebug.println(adc0.testConnection() ? "ADS1115 connection successful" : "ADS1115 connection failed");
 
     // We're going to do single shot sampling
-    printf("setMode(ADS1115_MODE_SINGLESHOT)...\n"); // XXX
+    printf("setMode(ADS1115_MODE_SINGLESHOT)...\n"); // @XXX
     adc0.setMode(ADS1115_MODE_SINGLESHOT);
 
     // Slow things down so that we can see that the "poll for conversion" code works
-    printf("setRate(ADS1115_RATE_250)...\n"); // XXX
+    printf("setRate(ADS1115_RATE_250)...\n"); // @XXX
     adc0.setRate(ADS1115_RATE_250);
 
     // Set the gain (PGA) +/- 6.144V
-    // Note that any analog input must be higher than –0.3V and less than VDD +0.3
-    printf("setGain(ADS1115_PGA_6P144)...\n"); // XXX
+    // @NOTE that any analog input must be higher than –0.3V and less than VDD +0.3
+    printf("setGain(ADS1115_PGA_6P144)...\n"); // @XXX
     adc0.setGain(ADS1115_PGA_6P144);
     // ALERT/RDY pin will indicate when conversion is ready
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         std::cout << "========================================" << std::endl;
 
         // The below method sets the mux and gets a reading.
-        printf("setMultiplexer(ADS1115_MUX_P0_NG)...\n"); // XXX
+        printf("setMultiplexer(ADS1115_MUX_P0_NG)...\n"); // @XXX
         adc0.setMultiplexer(ADS1115_MUX_P0_NG);
         adc0.triggerConversion();
         adc0.showConfigRegister();
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
         mDebug.print("A0: "); mDebug.print(adc0.getMilliVolts(false)); mDebug.println("mV");
         usleep(100 * 1000);
 
-        printf("setMultiplexer(ADS1115_MUX_P1_NG)...\n"); // XXX
+        printf("setMultiplexer(ADS1115_MUX_P1_NG)...\n"); // @XXX
         adc0.setMultiplexer(ADS1115_MUX_P1_NG);
         adc0.triggerConversion();
         adc0.showConfigRegister();
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
         mDebug.print("A1: "); mDebug.print(adc0.getMilliVolts(false)); mDebug.println("mV");
         usleep(100 * 1000);
 
-        printf("setMultiplexer(ADS1115_MUX_P2_NG)...\n"); // XXX
+        printf("setMultiplexer(ADS1115_MUX_P2_NG)...\n"); // @XXX
         adc0.setMultiplexer(ADS1115_MUX_P2_NG);
         adc0.triggerConversion();
         adc0.showConfigRegister();
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
         mDebug.print("A2: "); mDebug.print(adc0.getMilliVolts(false)); mDebug.println("mV");
         usleep(100 * 1000);
 
-        printf("setMultiplexer(ADS1115_MUX_P3_NG)...\n"); // XXX
+        printf("setMultiplexer(ADS1115_MUX_P3_NG)...\n"); // @XXX
         adc0.setMultiplexer(ADS1115_MUX_P3_NG);
         // Do conversion polling via I2C on this last reading:
         adc0.showConfigRegister();

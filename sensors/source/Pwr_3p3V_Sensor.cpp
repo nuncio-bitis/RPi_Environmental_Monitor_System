@@ -57,7 +57,7 @@ void Pwr3p3VSensorTask::Entry()
     waitForBeginOperation();
 
     // ------------------------------------------------
-    // TODO Task initialization
+    // @TODO Task initialization
 
     m_pLog->log(eLOG_DEBUG, "%s: BEGIN + Initialization", GetName().c_str());
 
@@ -82,12 +82,12 @@ void Pwr3p3VSensorTask::Entry()
         }
 
         // --------------------------------------------
-        // TODO Task work - gather sensor data
+        // @TODO Task work - gather sensor data
 
         // Get sample at sample frequency
         Sleep(1000 / m_sampleFreq);
 
-        // TODO cumulative += value read from hardware
+        // @TODO cumulative += value read from hardware
 
         if (++m_sampleCount >= m_samplesPerReport) {
             newValue = cumulative / m_sampleCount;
@@ -101,7 +101,7 @@ void Pwr3p3VSensorTask::Entry()
         // PAUSED: Must wait to be told to continue.
         if (isPaused())
         {
-            // TODO Pause data-gathering timer
+            // @TODO Pause data-gathering timer
 
             m_pLog->log(eLOG_DEBUG, "--- %s Paused", GetName().c_str());
             waitForContinue();
@@ -112,7 +112,7 @@ void Pwr3p3VSensorTask::Entry()
     } // end while running
 
     // ------------------------------------------------
-    // TODO Task cleanup before exit
+    // @TODO Task cleanup before exit
     m_pLog->log(eLOG_DEBUG, "%s.%s : CLEANUP", GetName().c_str(), __FUNCTION__);
     // ------------------------------------------------
 }

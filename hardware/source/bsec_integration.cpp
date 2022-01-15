@@ -124,7 +124,7 @@ static bsec_library_return_t bme680_bsec_update_subscription(float sample_rate)
 
     bsec_library_return_t status = BSEC_OK;
 
-    /* note: Virtual sensors as desired to be added here */
+    /* @NOTE: Virtual sensors as desired to be added here */
     requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ;
     requested_virtual_sensors[0].sample_rate = sample_rate;
     requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE;
@@ -182,14 +182,14 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
     ret.bme680_status = bme68x_init(&bme68x_g);
     if (ret.bme680_status != BME68X_OK)
     {
-        fprintf(stderr, "%s: bme68x_init() returned %d\n", __FUNCTION__, ret.bme680_status); // XXX
+        fprintf(stderr, "%s: bme68x_init() returned %d\n", __FUNCTION__, ret.bme680_status); // @XXX
         return ret;
     }
     /* Initialize BSEC library */
     ret.bsec_status = bsec_init();
     if (ret.bsec_status != BSEC_OK)
     {
-        fprintf(stderr, "%s: bsec_init() returned %d\n", __FUNCTION__, ret.bsec_status); // XXX
+        fprintf(stderr, "%s: bsec_init() returned %d\n", __FUNCTION__, ret.bsec_status); // @XXX
         return ret;
     }
 
@@ -200,7 +200,7 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
         ret.bsec_status = bsec_set_configuration(bsec_config, bsec_config_len, work_buffer, sizeof(work_buffer));
         if (ret.bsec_status != BSEC_OK)
         {
-            fprintf(stderr, "%s: bsec_set_configuration() returned %d\n", __FUNCTION__, ret.bsec_status); // XXX
+            fprintf(stderr, "%s: bsec_set_configuration() returned %d\n", __FUNCTION__, ret.bsec_status); // @XXX
             return ret;
         }
     }
@@ -212,7 +212,7 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
         ret.bsec_status = bsec_set_state(bsec_state, bsec_state_len, work_buffer, sizeof(work_buffer));
         if (ret.bsec_status != BSEC_OK)
         {
-            fprintf(stderr, "%s: bsec_set_state() returned %d\n", __FUNCTION__, ret.bsec_status); // XXX
+            fprintf(stderr, "%s: bsec_set_state() returned %d\n", __FUNCTION__, ret.bsec_status); // @XXX
             return ret;
         }
     }
@@ -224,7 +224,7 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
     ret.bsec_status = bme680_bsec_update_subscription(sample_rate);
     if (ret.bsec_status != BSEC_OK)
     {
-        printf("bme680_bsec_update_subscription() returned {%d, %d}\n", ret.bme680_status, ret.bsec_status); // XXX
+        printf("bme680_bsec_update_subscription() returned {%d, %d}\n", ret.bme680_status, ret.bsec_status); // @XXX
         return ret;
     }
 
@@ -249,8 +249,8 @@ void bme680_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings)
     if (sensor_settings->trigger_measurement)
     {
         /* Set sensor configuration */
-//    	bme68x_config.filter = BME68X_FILTER_SIZE_3; // XXX
-//        bme68x_config.odr = BME68X_ODR_NONE; // XXX
+//    	bme68x_config.filter = BME68X_FILTER_SIZE_3; // @XXX
+//        bme68x_config.odr = BME68X_ODR_NONE; // @XXX
         bme68x_config.os_hum  = sensor_settings->humidity_oversampling;
         bme68x_config.os_pres = sensor_settings->pressure_oversampling;
         bme68x_config.os_temp = sensor_settings->temperature_oversampling;
@@ -417,7 +417,7 @@ void bme680_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec_inputs
         num_bsec_outputs = BSEC_NUMBER_OUTPUTS;
 
         /* Perform processing of the data by BSEC
-           Note:
+           @NOTE:
            * The number of outputs you get depends on what you asked for during bsec_update_subscription(). This is
              handled under bme680_bsec_update_subscription() function in this example file.
            * The number of actual outputs that are returned is written to num_bsec_outputs. */
@@ -525,7 +525,7 @@ void bsec_iot_loop(get_timestamp_us_fct get_timestamp_us, output_ready_fct outpu
 
         /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
         bsec_sensor_control(time_stamp, &sensor_settings);
-        if (0) { // XXX
+        if (0) { // @XXX
         	printf("bsec_sensor_control(): sensor_settings\n");
         	printf("  next_call                %lld\n", sensor_settings.next_call              );
         	printf("  process_data             0x%02X\n", sensor_settings.process_data         );
@@ -536,7 +536,7 @@ void bsec_iot_loop(get_timestamp_us_fct get_timestamp_us, output_ready_fct outpu
         	printf("  temperature_oversampling %d\n", sensor_settings.temperature_oversampling );
         	printf("  humidity_oversampling    %d\n", sensor_settings.humidity_oversampling    );
         	printf("  trigger_measurement      %d\n", sensor_settings.trigger_measurement      );
-        } // XXX
+        } // @XXX
 
         /* Trigger a measurement if necessary */
         bme680_bsec_trigger_measurement(&sensor_settings);

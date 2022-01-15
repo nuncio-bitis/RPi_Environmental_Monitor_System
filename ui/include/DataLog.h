@@ -41,7 +41,7 @@ class DataLogTask : public AppTask, public DataItemSubscriber
 {
     // ------------------------------------------------------------------------
 public:
-    DataLogTask(const std::string name, int id, Logger* pLog /* TODO pass in link to data store */);
+    DataLogTask(const std::string name, int id, Logger* pLog /* @TODO pass in link to data store */);
     virtual ~DataLogTask();
 
     void DataItemUpdated(int id) override;

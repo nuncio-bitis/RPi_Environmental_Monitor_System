@@ -37,7 +37,7 @@ class UITask : public AppTask, public DataItemSubscriber
 {
     // ------------------------------------------------------------------------
 public:
-    UITask(const std::string name, int id, Logger* pLog /* TODO pass in link to data store */);
+    UITask(const std::string name, int id, Logger* pLog /* @TODO pass in link to data store */);
     virtual ~UITask();
 
     void DataItemUpdated(int id) override;

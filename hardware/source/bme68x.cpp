@@ -165,18 +165,18 @@ int8_t bme68x_init(struct bme68x_dev *dev)
             }
             else
             {
-                fprintf(stderr, "%s: BME68X_E_DEV_NOT_FOUND (%d)\n", __FUNCTION__, BME68X_E_DEV_NOT_FOUND); // XXX
+                fprintf(stderr, "%s: BME68X_E_DEV_NOT_FOUND (%d)\n", __FUNCTION__, BME68X_E_DEV_NOT_FOUND); // @XXX
                 rslt = BME68X_E_DEV_NOT_FOUND;
             }
         }
         else
         {
-            fprintf(stderr, "%s: bme68x_get_regs() returned %d\n", __FUNCTION__, rslt); // XXX
+            fprintf(stderr, "%s: bme68x_get_regs() returned %d\n", __FUNCTION__, rslt); // @XXX
         }
     }
     else
     {
-        fprintf(stderr, "%s: bme68x_soft_reset() returned %d\n", __FUNCTION__, rslt); // XXX
+        fprintf(stderr, "%s: bme68x_soft_reset() returned %d\n", __FUNCTION__, rslt); // @XXX
     }
 
     return rslt;
@@ -222,7 +222,7 @@ int8_t bme68x_set_regs(const uint8_t *reg_addr, const uint8_t *reg_data, uint32_
                 dev->intf_rslt = dev->write(tmp_buff[0], &tmp_buff[1], (2 * len) - 1, dev->intf_ptr);
                 if (dev->intf_rslt != 0)
                 {
-        fprintf(stderr, "%s: dev->write() returned %d\n", __FUNCTION__, dev->intf_rslt); // XXX
+        fprintf(stderr, "%s: dev->write() returned %d\n", __FUNCTION__, dev->intf_rslt); // @XXX
                     rslt = BME68X_E_COM_FAIL;
                 }
             }
@@ -701,7 +701,7 @@ int8_t bme68x_get_heatr_conf(const struct bme68x_heatr_conf *conf, struct bme68x
     uint8_t data_array[10] = { 0 };
     uint8_t i;
 
-    /* FIXME: Add conversion to deg C and ms and add the other parameters */
+    /* @FIXME: Add conversion to deg C and ms and add the other parameters */
     rslt = bme68x_get_regs(BME68X_REG_RES_HEAT0, data_array, 10, dev);
     if (rslt == BME68X_OK)
     {

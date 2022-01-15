@@ -111,7 +111,7 @@ int64_t getCPUFreeMem()
         infofile.close();
     }
 #else
-    // TODO
+    // @TODO
 #endif
 
     return ret;
@@ -138,7 +138,7 @@ double getCPUTemp()
         systemp = millideg / 1000;
     }
 #else
-    // TODO
+    // @TODO
 #endif
 
     return systemp;
@@ -228,7 +228,7 @@ int main(int argc, char **argv)
     DataLogTask dataLog{"Data Log", DATA_LOG_TASK_ID, &logger};
 
     // Define sensor tasks (Type = flow, pressure, temperature, light, humidity, etc.)
-    // Note the Data ID (DID) doubles as a task ID.
+    // @NOTE the Data ID (DID) doubles as a task ID.
     // Format:
     // TaskClass       taskVar     {NAME,                 DID,           LOG_PTR,  TYPE,  SAMPLE_FREQ, REPORT_PERIOD);
     //LightSensorTask   lightSensor  {"Ambient Light"     , LIGHT_SENSE   , &logger, "Light"  , 20.0, 2.0}; // 20Hz, update every 2 seconds
@@ -241,7 +241,7 @@ int main(int argc, char **argv)
     // Reporting is done on every sample period.
     BME680SensorTask  bme680Sensor {"BME680 Env. Sensor", BME680_BASE, &logger, "Various", 1.0, 1.0};
 
-    // NOTE: Sensor tasks have their own timers to read and average sensor data, then write to DataStore objects.
+    // @NOTE: Sensor tasks have their own timers to read and average sensor data, then write to DataStore objects.
 
     // Timer to update internal HW stats
     StatTimer statTimer("IntStatTimer", (Timer::IntervalMs)2000, (Timer::IntervalMs)1000, &logger);
@@ -264,7 +264,7 @@ int main(int argc, char **argv)
 
     //-------------------------------------------------------------------------
 
-    // TODO Create CLI object
+    // @TODO Create CLI object
 
     //-------------------------------------------------------------------------
 
@@ -288,10 +288,10 @@ int main(int argc, char **argv)
     // This would be the application background in a normal system...
     while (!masterTask.isTerminated() && !gTerminate)
     {
-        // TODO - Background processing, maybe including CLI...
+        // @TODO - Background processing, maybe including CLI...
 
 #if 0
-        // DEBUG - sample system lifecycle
+        // @DEBUG - sample system lifecycle
         // ------------------------------------------------
         switch (gStateCount++) {
         case 1:
@@ -556,7 +556,7 @@ const char* FaultString(int signal, int code)
  *  This function collects the exception information and prints a standard
  *  diagnostic message via qDebug
  *
- *  Note: Linux signal handling on some archs works by the kernel replacing the
+ *  @NOTE: Linux signal handling on some archs works by the kernel replacing the
  *  return address of the faulting function (within the stack) with the signla
  *  "unwinding" function, which would later restore it. What this means is that
  *  the backtrace we get is missing the single most important bit of information:

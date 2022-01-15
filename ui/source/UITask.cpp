@@ -103,7 +103,7 @@ void UITask::UpdateItem(DataItem<uint32_t> *item)
                 sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     }
 
-    // TODO Update value on UI
+    // @TODO Update value on UI
 }
 
 void UITask::UpdateItem(DataItem<uint64_t> *item)
@@ -134,7 +134,7 @@ void UITask::UpdateItem(DataItem<uint64_t> *item)
                 sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     }
 
-    // TODO Update value on UI
+    // @TODO Update value on UI
 }
 
 void UITask::UpdateItem(DataItem<double> *item)
@@ -165,7 +165,7 @@ void UITask::UpdateItem(DataItem<double> *item)
                 sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     }
 
-    // TODO Update value on UI
+    // @TODO Update value on UI
 }
 
 // ****************************************************************************
@@ -176,7 +176,7 @@ void UITask::DataItemUpdated(int id)
 //    DataItemPublisher* pdi = DataStore::GetDataItem((DataItemId)id);
 //    m_pLog->log(eLOG_DEBUG, "[UI] Data Item '%s' (%d) update detected.", pdi->name().c_str(), id);
 
-    // TODO Update value on UI
+    // @TODO Update value on UI
 }
 
 // ****************************************************************************
@@ -187,7 +187,7 @@ void UITask::Entry()
 
     // ------------------------------------------------
     // Task init... subscribe to data items
-    // NOTE: This isn't necessary if the UI will simply poll the data items.
+    // @NOTE: This isn't necessary if the UI will simply poll the data items.
     cpu_mem_free_tok = cpu_mem_free->subscribe(this);
     cpu_temp_tok     = cpu_temp->subscribe(this);
     ambientLight_tok        = ambientLight->subscribe(this);
@@ -217,7 +217,7 @@ void UITask::Entry()
 
         // --------------------------------------------
         // Task work - pull values from data store to update log file.
-        // Note this is separate from DataItemUpdated() being called when data is updated.
+        // @NOTE this is separate from DataItemUpdated() being called when data is updated.
         // That's also when the UI display should be updated.
 
         // 100ms wait every cycle.
@@ -272,7 +272,7 @@ void UITask::Entry()
         // PAUSED: Must wait to be told to continue.
         if (isPaused())
         {
-            // TODO Blank & power off screens,LEDs, etc.
+            // @TODO Blank & power off screens,LEDs, etc.
 
             m_pLog->log(eLOG_DEBUG, "--- %s Paused", GetName().c_str());
             waitForContinue();
