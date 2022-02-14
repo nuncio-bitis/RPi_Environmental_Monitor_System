@@ -290,62 +290,21 @@ int main(int argc, char **argv)
     {
         // @TODO - Background processing, maybe including CLI...
 
-#if 0
-        // @DEBUG - sample system lifecycle
         // ------------------------------------------------
-        switch (gStateCount++) {
-        case 1:
-            logger.log(eLOG_DEBUG, "----------------------------------------");
-            logger.log(eLOG_DEBUG, "main(%d) Pausing system...", gStateCount);
-            logger.log(eLOG_DEBUG, "----------------------------------------");
-            statTimer.Pause();
-            masterTask.PauseSystem();
-            gStateCount++;
-            Task::Sleep(5 * 1000);
-            break;
 
-        case 3:
-            logger.log(eLOG_DEBUG, "----------------------------------------");
-            logger.log(eLOG_DEBUG, "main(%d) Resuming system...", gStateCount);
-            logger.log(eLOG_DEBUG, "----------------------------------------");
-            statTimer.Resume();
-            masterTask.ContinueSystem();
-            gStateCount++;
-            Task::Sleep(5 * 1000);
-            break;
+        Task::Sleep(1 * 1000);
 
-        case 5:
+        // Do something every 5 minutes
+        if (++gStateCount >= (5*60))
+        {
             logger.log(eLOG_DEBUG, "----------------------------------------");
-            logger.log(eLOG_DEBUG, "main(%d) Terminating system...", gStateCount);
-            logger.log(eLOG_DEBUG, "----------------------------------------");
-            gTerminate = 1; // cause clean shutdown
-            break;
-
-        default:
-            logger.log(eLOG_DEBUG, "----------------------------------------");
-            logger.log(eLOG_DEBUG, "main(%d) Doing work...", gStateCount);
-            logger.log(eLOG_DEBUG, "----------------------------------------");
+            logger.log(eLOG_DEBUG, "main() Getting system info...");
             logger.log(eLOG_DEBUG, masterTask.GetSystemInfo());
             logger.log(eLOG_DEBUG, "----------------------------------------");
-            Task::Sleep(5 * 1000);
-            break;
-        }
-        // ------------------------------------------------
-#else
-        // ------------------------------------------------
-        Task::Sleep(500);
-        if (++gStateCount >= (60 * 2))
-        {
-            logger.log(eLOG_DEBUG, "main() Doing work...");
-            //logger.log(eLOG_DEBUG, "----------------------------------------");
-            //logger.log(eLOG_DEBUG, "main() Getting system info...");
-            //logger.log(eLOG_DEBUG, "----------------------------------------");
-            //logger.log(eLOG_DEBUG, masterTask.GetSystemInfo());
-            //logger.log(eLOG_DEBUG, "----------------------------------------");
             gStateCount = 0;
         }
+
         // ------------------------------------------------
-#endif
     } // end while()
 
     SaveSystemState();

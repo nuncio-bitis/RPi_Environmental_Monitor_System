@@ -232,9 +232,8 @@ void UITask::Entry()
         {
             count1 = 0;
 
-            // CPU items
-            UpdateItem(cpu_mem_free);
-            UpdateItem(cpu_temp);
+            // ADC item
+            UpdateItem(ambientLight);
         }
 
         // [2] Update these every 1 minute
@@ -242,8 +241,11 @@ void UITask::Entry()
         {
             count2 = 0;
 
+            // CPU items
+            UpdateItem(cpu_mem_free);
+            UpdateItem(cpu_temp);
+
             // ADC items
-            UpdateItem(ambientLight);
             UpdateItem(pwr5v);
             UpdateItem(pwr3p3v);
         }
