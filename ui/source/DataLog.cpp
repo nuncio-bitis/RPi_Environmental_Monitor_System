@@ -248,6 +248,9 @@ void DataLogTask::Entry()
     // This task will poll all data items every 15 minutes
     // and add them to the data log.
 
+    // Get data right away
+    ReportData();
+
     TaskState prevState = GetState();
     while (!isStopped())
     {

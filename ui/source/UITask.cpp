@@ -223,12 +223,16 @@ void UITask::Entry()
         // 100ms wait every cycle.
         Sleep(100);
 
-        static uint32_t count1 = 0;
-        static uint32_t count2 = 0;
-        static uint32_t count3 = 0;
+        static const uint32_t count_max1 = (     10 * 10); // 10-sec counter
+        static const uint32_t count_max2 = ( 1 * 60 * 10); // 1-min counter
+        static const uint32_t count_max3 = (15 * 60 * 10); // 15-min counter
+
+        static uint32_t count1 = 0; // start after one full wait period
+        static uint32_t count2 = (count_max2 - (15 * 10)); // start in 15 seconds
+        static uint32_t count3 = (count_max3 - (30 * 10)); // start in 30 seconds
 
         // [1] Update these every 10 seconds
-        if (++count1 >= (10 * 10))
+        if (++count1 >= count_max1)
         {
             count1 = 0;
 
@@ -237,7 +241,7 @@ void UITask::Entry()
         }
 
         // [2] Update these every 1 minute
-        if (++count2 >= (1 * 60 * 10))
+        if (++count2 >= count_max2)
         {
             count2 = 0;
 
@@ -251,7 +255,7 @@ void UITask::Entry()
         }
 
         // [3] Update these every 15 minutes
-        if (++count3 >= (15 * 60 * 10))
+        if (++count3 >= count_max3)
         {
             count3 = 0;
 
