@@ -46,7 +46,7 @@ const char *BME680SensorTask::configFile = "../data/config.bin";
 const char *BME680SensorTask::stateFile = "../data/state.bin";
 
 // Offsets based on Eve Weather sensor
-const double BME680SensorTask::tempOffset  = -0.057; // degC/100
+const double BME680SensorTask::tempOffset  = -0.043; // degC/100
 const double BME680SensorTask::humOffset   = +6.50;  // %
 const double BME680SensorTask::pressOffset = +0.04;  // inHg
 

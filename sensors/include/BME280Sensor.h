@@ -71,7 +71,7 @@ private:
 
 #ifdef BME280_FLOAT_ENABLE
     // Offsets based on Eve Weather sensor
-    const double tempOffset  = +0.52; // degC
+    const double tempOffset  = -0.50; // degC
     const double humOffset   = +5.50; // %
     const double pressOffset = +1.02; // hPa
 #endif
