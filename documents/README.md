@@ -1,4 +1,4 @@
-# Raspberry Pi Environental Monitoring System
+# RaspberryPi Environental Monitoring System (RPEMS)
 
 ## Overview
 Sample software system used to monitor data from various sensors attached to a Raspberry Pi.
