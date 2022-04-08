@@ -50,6 +50,7 @@
 #include "MasterTask.h"
 #include "UITask.h"
 #include "DataLog.h"
+#include "LCDTask.h"
 
 //#include "LightSensor.h"
 //#include "Pwr_5V_Sensor.h"
@@ -119,6 +120,51 @@ int64_t getCPUFreeMem()
 
 //-----------------------------------------------------------------------------
 
+// /proc/meminfo (MemTotal:)
+int64_t getCPUTotalMem()
+{
+    int64_t ret = -1;
+
+#if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
+    const std::string meminfo("/proc/meminfo");
+    std::ifstream infofile;
+    infofile.open (meminfo, std::ios::in);
+
+    if (infofile.is_open()) {
+        std::string line;
+        while (std::getline(infofile,line)) {
+            // Read lines until find "MemTotal:"
+            std::string::size_type n = line.find("MemTotal:");
+            if (n != std::string::npos) {
+                break;
+            }
+        }
+
+        // Split string into words (vector of strings)
+        std::istringstream iss(line);
+        std::vector<std::string> tokens;
+        std::copy(std::istream_iterator<std::string>(iss),
+                std::istream_iterator<std::string>(),
+                back_inserter(tokens));
+
+        ret = std::stoll(tokens[1]);
+        if ("kB" == tokens[2]) {
+            ret *= 1024;
+        } else if ("MB" == tokens[2]) {
+            ret *= 1024 * 1024;
+        }
+
+        infofile.close();
+    }
+#else
+    // @TODO
+#endif
+
+    return ret;
+}
+
+//-----------------------------------------------------------------------------
+
 // /opt/vc/bin/vcgencmd measure_temp
 double getCPUTemp()
 {
@@ -157,6 +203,7 @@ public:
        Timer(name, start, interval),
        m_plogger(plogger)
     {
+        cpu_mem_total = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_TOTAL));
         cpu_mem_free = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_FREE));
         cpu_temp = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(CPU_TEMP));
         m_plogger->log(eLOG_INFO, "StatTimer(%s) Start:%d, Intv:%d", name.c_str(), start, interval);
@@ -174,6 +221,13 @@ public:
 
     void ExpirationRoutine() override
     {
+        // CPU_MEM_TOTAL
+        int64_t mtotal = getCPUTotalMem();
+        if (mtotal > 0)
+        {
+            cpu_mem_total->setValue(mtotal);
+        }
+
         // CPU_MEM_FREE
         int64_t mfree = getCPUFreeMem();
         if (mfree > 0)
@@ -191,6 +245,7 @@ public:
 
 private:
     Logger *m_plogger;
+    DataItem<uint64_t> *cpu_mem_total;
     DataItem<uint64_t> *cpu_mem_free;
     DataItem<double> *cpu_temp;
 };
@@ -226,6 +281,7 @@ int main(int argc, char **argv)
 
     UITask ui{"User Interface", UI_TASK_ID, &logger};
     DataLogTask dataLog{"Data Log", DATA_LOG_TASK_ID, &logger};
+    LCDTask lcd{"LCD Display", LCD_TASK_ID, &logger};
 
     // Define sensor tasks (Type = flow, pressure, temperature, light, humidity, etc.)
     // @NOTE the Data ID (DID) doubles as a task ID.
@@ -255,6 +311,7 @@ int main(int argc, char **argv)
     // Add tasks
     masterTask.AddAppTask(&ui);
     masterTask.AddAppTask(&dataLog);
+    masterTask.AddAppTask(&lcd);
     //masterTask.AddAppTask(&lightSensor);
     //masterTask.AddAppTask(&pwr5vSensor);
     //masterTask.AddAppTask(&pwr3p3vSensor);
@@ -339,11 +396,6 @@ void SaveSystemState(void)
 {
     // Make main loop exit
     gTerminate = 1;
-
-    //  Shut down all active scripts.  This will terminate BIT and freeze
-    //  the state of the DST.
-//    gObjMgr->ServerConsole()->Display(1, "Stopping all scripts");
-//    gObjMgr->ScriptManager()->StopAllScripts();
 
     pLogger->log(eLOG_CRIT, "Saving system state");
     pLogger->WriteToFile();

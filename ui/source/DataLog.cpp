@@ -36,6 +36,7 @@ DataLogTask::DataLogTask(const std::string name, int id, Logger* pLog) :
     m_id(id),
     m_pLog(pLog)
 {
+    cpu_mem_total       = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_TOTAL));
     cpu_mem_free        = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_FREE));
     cpu_temp            = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(CPU_TEMP));
     ambientLight        = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(LIGHT_SENSE));

@@ -33,9 +33,21 @@
 
 // ****************************************************************************
 
+// @DEBUG
+#define HERE() do { printf ("\e[1;31m%s(%d).%s\e[0m\r\n", __FILE__, __LINE__, __FUNCTION__); } while(0)
+#define DPRINTF(fmt, args...) do { \
+        printf ("\e[1;31m%s(%d).%s\e[0m ", __FILE__, __LINE__, __FUNCTION__); \
+        printf(fmt, ## args); \
+        fflush(stdout); \
+} while (0)
+// @DEBUG
+
+// ****************************************************************************
+
 // IDs of all data items in the system.
 // These double as task IDs also.
 enum DataItemId {
+    CPU_MEM_TOTAL,  // /proc/meminfo (MemTotal:)
     CPU_MEM_FREE,   // /proc/meminfo (MemFree:)
     CPU_TEMP,       // Pi: /opt/vc/bin/vcgencmd measure_temp ; Linux: /sys/class/thermal/thermal_zone0/temp
 
@@ -59,6 +71,7 @@ enum DataItemId {
 
     UI_TASK_ID,
     DATA_LOG_TASK_ID,
+    LCD_TASK_ID,
 
     NUM_DATA_ITEMS
 };

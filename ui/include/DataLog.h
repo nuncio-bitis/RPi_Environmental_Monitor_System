@@ -63,6 +63,7 @@ private:
     std::ofstream dataLogFile;
 
     // Pointers to data store objects
+    DataItem<uint64_t> *cpu_mem_total;
     DataItem<uint64_t> *cpu_mem_free;
     DataItem<double>   *cpu_temp;
 
