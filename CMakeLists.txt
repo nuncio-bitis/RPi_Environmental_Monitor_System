@@ -33,11 +33,12 @@ add_executable(EnvironmentMonitor
     MasterTask.cpp
 )
 
-target_link_libraries(EnvironmentMonitor PUBLIC pthread ${cppTools} sensors ui hardware algobsec stdc++fs )
+target_link_libraries(EnvironmentMonitor PUBLIC pthread ${cppTools} sensors ui hardware algobsec stdc++fs wiringPi )
 
 target_include_directories(EnvironmentMonitor PUBLIC
     /opt/homebrew/include
     ${PROJECT_SOURCE_DIR}/../../C-Projects/Tools/include
+    ${PROJECT_SOURCE_DIR}/../WiringPi/wiringpi
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/hardware/include
     ${PROJECT_SOURCE_DIR}/sensors/include

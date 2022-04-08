@@ -13,7 +13,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 add_library(ui
     source/UITask.cpp
     source/DataLog.cpp
-    )
+    source/LCDTask.cpp
+)
 
 install(TARGETS ui DESTINATION "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" )
 
@@ -21,4 +22,5 @@ target_include_directories(ui PUBLIC
     ${PROJECT_SOURCE_DIR}/../../../C-Projects/Tools/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/..
-    )
+    ../hardware/include
+)

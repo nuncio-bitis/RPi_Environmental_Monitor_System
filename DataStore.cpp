@@ -45,6 +45,8 @@ DataStore::DataStore()
     // m_DataItemList[DID] = new DataItem<TYPE>(NAME, UNITS, DID, INITIAL_VAL, LOW_LIMIT, HIGH_LIMIT, STALE_TIME);
 
     // CPU sensor items
+    m_DataItemList[CPU_MEM_TOTAL] =
+        new DataItem<uint64_t>("CPU_Mem_Total", "bytes", CPU_MEM_TOTAL, 0, 0, ((uint64_t)8*1024*1024*1024), 2000);
     m_DataItemList[CPU_MEM_FREE] =
         new DataItem<uint64_t>("CPU_Mem_Free", "bytes", CPU_MEM_FREE, 0, 0, ((uint64_t)8*1024*1024*1024), 2000);
     m_DataItemList[CPU_TEMP]     = new DataItem<double>("CPU_Temp", "'C", CPU_TEMP, 0, -40.0, 80.0, 2000);
