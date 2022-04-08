@@ -173,11 +173,11 @@ void LCDTask::Entry()
             // pressure and ambient light on the second line.
             // |++++++++++++++++|
             // |T:xx.x°F rH:xx% | Temperature, Humidity
-            // |P:xxinHg L:xxxx | Pressure, Light
+            // |P:xx.xx  L:xxxx | Pressure, Light
             // |++++++++++++++++|
 
             sprintf(line1, "T:%4.1f%cF rH:%2.0f%% ", btemp, 0xdf, rhum);
-            sprintf(line2, "P:%2.0finHg L:%4.0f ", press, light);
+            sprintf(line2, "P:%5.2f  L:%4.0f ", press, light);
 
             break;
         }

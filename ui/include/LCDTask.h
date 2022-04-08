@@ -83,7 +83,7 @@ private:
     enum LCD_Mode m_mode = MODE_FIRST;
 
     // Number of seconds to stay on one display mode.
-    const int ModeDelay_sec = 3;
+    const int ModeDelay_sec = 4;
 
     // Buffers to hold LCD text
     char line1[16];
