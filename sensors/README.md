@@ -29,8 +29,6 @@ Include these all as one sensor:
 ---
 
 ## Sensor Tasks
-* Pwr_5V_Sensor
-* Pwr_3p3V_Sensor
-* LightSensor
+* ADC_Sensors : it's easier to read all ADCs at once to avoid open/close conflicts on the bus.
 * BME280Sensor
 * BME680Sensor
