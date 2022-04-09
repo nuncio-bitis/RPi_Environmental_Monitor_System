@@ -1,7 +1,7 @@
 /* 
  * This file is part of the RPi_Environmental_Monitor_System distribution
  *   (https://github.com/nuncio-bitis/RPi_Environmental_Monitor_System
- * Copyright (c) 2021 James P. Parziale.
+ * Copyright (c) 2021-2022 James P. Parziale.
  * 
  * This program is free software: you can redistribute it and/or modify  
  * it under the terms of the GNU General Public License as published by  
@@ -287,9 +287,6 @@ int main(int argc, char **argv)
     // @NOTE the Data ID (DID) doubles as a task ID.
     // Format:
     // TaskClass       taskVar     {NAME,                 DID,           LOG_PTR,  TYPE,  SAMPLE_FREQ, REPORT_PERIOD);
-    //LightSensorTask   lightSensor  {"Ambient Light"     , LIGHT_SENSE   , &logger, "Light"  , 20.0, 2.0}; // 20Hz, update every 2 seconds
-    //Pwr5VSensorTask   pwr5vSensor  {"5V Power Supply"   , PWR_5V_SENSE  , &logger, "Voltage", 20.0, 2.0}; // 20Hz, update every 2 seconds
-    //Pwr3p3VSensorTask pwr3p3vSensor{"3.3V Power Supply" , PWR_3P3V_SENSE, &logger, "Voltage",  5.0, 1.0}; //  5Hz, update every 1 seconds
     ADCSensorsTask    adcSensors   {"ADC Sensors"       , ADC_BASE   , &logger, "Various", 20.0, 2.0}; // 20Hz, update every 2 seconds
     BME280SensorTask  bme280Sensor {"BME280 Env. Sensor", BME280_BASE, &logger, "Various", 10.0, 3.0}; // 10Hz, update every 3 seconds
 
@@ -312,9 +309,6 @@ int main(int argc, char **argv)
     masterTask.AddAppTask(&ui);
     masterTask.AddAppTask(&dataLog);
     masterTask.AddAppTask(&lcd);
-    //masterTask.AddAppTask(&lightSensor);
-    //masterTask.AddAppTask(&pwr5vSensor);
-    //masterTask.AddAppTask(&pwr3p3vSensor);
     masterTask.AddAppTask(&adcSensors);
     masterTask.AddAppTask(&bme280Sensor);
     masterTask.AddAppTask(&bme680Sensor);
@@ -588,8 +582,8 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
         // Make main loop exit
         gTerminate = 1;
 
-//        // Re-register exception handlers to be able to re-catch ^C
-//        SetupExceptionHandler();
+        // Re-register exception handlers to be able to re-catch ^C
+        //SetupExceptionHandler();
         return;
     }
 

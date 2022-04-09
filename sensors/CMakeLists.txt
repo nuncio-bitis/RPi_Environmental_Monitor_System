@@ -11,9 +11,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_library(sensors
-#    source/LightSensor.cpp
-#    source/Pwr_5V_Sensor.cpp
-#    source/Pwr_3p3V_Sensor.cpp
     source/ADC_Sensors.cpp
     source/BME280Sensor.cpp
     source/BME680Sensor.cpp
