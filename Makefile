@@ -24,7 +24,7 @@ MAKEFILE= $(subst ../../,,$(lastword $(MAKEFILE_LIST)))
 
 PROJECT_ROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-TOOLS_DIR=$(PROJECT_ROOT)../Tools
+TOOLS_DIR=$(PROJECT_ROOT)../../C-Projects/Tools
 INCLUDES += -I$(TOOLS_DIR)/include
 
 #-------------------------------------------------------------------------------
