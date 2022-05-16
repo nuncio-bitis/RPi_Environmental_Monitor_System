@@ -29,8 +29,8 @@ endif
 GCCVERSIONGT60 := $(shell expr $(GCC_VER) \>= $(MIN_GCC_VER))
 OSTYPE := $(shell uname)
 ifeq "$(GCCVERSIONGT60)" "1"
-#    GCC_STD=-std=c++20
-    GCC_STD=-std=c++2a
+#    GCC_STD=-std=c++17
+    GCC_STD=-std=c++20
 else
     GCC_STD=-std=c++0x
 endif
