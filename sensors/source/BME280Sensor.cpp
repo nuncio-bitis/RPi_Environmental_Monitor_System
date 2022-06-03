@@ -204,7 +204,7 @@ void BME280SensorTask::Entry()
         temp_current = DegreesC_to_DegreesF(comp_data.temperature + tempOffset);
         //m_pLog->log(eLOG_DEBUG, "BME280 Temp: %.2f︒F", temp_current);
 
-        press_current = hPa_to_inHg((0.01 * comp_data.pressure) + pressOffset);
+        press_current = Pa_to_inHg(comp_data.pressure) + pressOffset;
         //m_pLog->log(eLOG_DEBUG, "BME280 Pressure: %.2f inHg", press_current);
 
         rh_current = comp_data.humidity + humOffset;
